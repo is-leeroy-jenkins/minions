@@ -309,8 +309,8 @@ consume provider credits.
 
 ## Related Projects
 
-- [fonky](https://github.com/is-leeroy-jenkins/fonky) — provider-compatible AI tools
-- [guro](https://github.com/is-leeroy-jenkins/guro) — reusable instruction library
+- [fonky](https://github.com/is-leeroy-jenkins/fonky#fonky) — provider-compatible AI tools
+- [guro](https://github.com/is-leeroy-jenkins/guro#guro) — reusable instruction library
 - [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
 - [Google Agent Development Kit](https://google.github.io/adk-docs/)
 - [xAI API Tools](https://docs.x.ai/developers/tools/overview)
