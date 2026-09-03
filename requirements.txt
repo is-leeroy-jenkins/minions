@@ -1,0 +1,5 @@
+openai-agents
+google-adk
+xai-sdk
+claude-agent-sdk
+anthropic
