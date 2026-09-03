@@ -3,12 +3,10 @@
 
 ___
 
-minions is a lightweight Python framework for creating reusable AI agents across OpenAI,
-Google Gemini, xAI Grok, and Anthropic Claude. It provides a small provider-specific implementation for each supported agent SDK.
+A lightweight Python framework for creating reusable AI agents across OpenAI,
+Google Gemini, xAI Grok, and Anthropic Claude and places a consistent application-facing layer over their differences. 
 
-
-minions places a consistent application-facing layer over those differences. Applications can
-configure a named agent, assign instructions and tools, execute it synchronously or
+Applications can configure a named agent, assign instructions and tools, execute it synchronously or
 asynchronously, and request streamed output without moving provider-specific logic into the
 application itself.
 
