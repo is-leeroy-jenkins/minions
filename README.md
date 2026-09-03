@@ -1,4 +1,7 @@
-# minions
+###### minions
+![](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/images/minions-project.png)
+
+___
 
 minions is a lightweight Python framework for creating reusable AI agents across OpenAI,
 Google Gemini, xAI Grok, and Anthropic Claude. It provides a small provider-specific implementation for each supported agent SDK.
