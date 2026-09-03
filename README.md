@@ -7,12 +7,6 @@ minions is a lightweight Python framework for creating reusable AI agents across
 Google Gemini, xAI Grok, and Anthropic Claude. It provides a small provider-specific implementation for each supported agent SDK.
 
 
-## Why minions?
-
-Provider agent SDKs expose similar concepts through different interfaces. OpenAI uses agents
-and runners, Gemini uses Google ADK agents and runners, xAI uses agentic chat execution, and
-Claude provides both an API tool runner and a broader Agent SDK.
-
 minions places a consistent application-facing layer over those differences. Applications can
 configure a named agent, assign instructions and tools, execute it synchronously or
 asynchronously, and request streamed output without moving provider-specific logic into the
