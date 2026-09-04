@@ -1,6 +1,5 @@
-openai-agents
-mistralai[agents]
-google-adk
-xai-sdk
-claude-agent-sdk
 anthropic
+google-adk
+mistralai[agents]
+openai-agents
+xai-sdk
