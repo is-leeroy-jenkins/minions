@@ -4,7 +4,7 @@
 ___
 
 A lightweight Python framework for creating reusable AI agents across OpenAI,
-Google Gemini, xAI Grok, and Anthropic Claude and places a consistent application-facing layer over their differences. 
+Google Gemini, xAI Grok, Anthropic Claude, and Ministal AI. 
 
 Applications can configure a named agent, assign instructions and tools, execute it synchronously or
 asynchronously, and request streamed output without moving provider-specific logic into the
@@ -110,33 +110,33 @@ by every provider implementation.
 
 ### Configuration
 
-| Member | Type | Purpose |
-|---|---|---|
-| `name` | `str` | Human-readable agent name |
-| `model` | `str` | Provider model identifier |
-| `instructions` | `str` | System-level instructions supplied to the agent |
-| `tools` | `list[Any]` | Provider-compatible hosted or function tools |
-| `description` | `str` | Optional description of the agent's role |
-| `max_turns` | `int` | Maximum model/tool iterations for one run |
-| `context` | `dict[str, Any]` | Provider-neutral runtime context |
-| `provider` | `Any` | Provider SDK agent, client, or runtime object |
-| `result` | `Any` | Most recent provider-native result |
+| Member         | Type             | Purpose                                         |
+|----------------|------------------|-------------------------------------------------|
+| `name`         | `str`            | Human-readable agent name                       |
+| `model`        | `str`            | Provider model identifier                       |
+| `instructions` | `str`            | System-level instructions supplied to the agent |
+| `tools`        | `list[Any]`      | Provider-compatible hosted or function tools    |
+| `description`  | `str`            | Optional description of the agent's role        |
+| `max_turns`    | `int`            | Maximum model/tool iterations for one run       |
+| `context`      | `dict[str, Any]` | Provider-neutral runtime context                |
+| `provider`     | `Any`            | Provider SDK agent, client, or runtime object   |
+| `result`       | `Any`            | Most recent provider-native result              |
 
 ### Operations
 
-| Method | Purpose |
-|---|---|
-| `create()` | Creates the provider-specific agent or runtime |
-| `run(prompt)` | Executes the agent synchronously |
-| `run_async(prompt)` | Executes the agent asynchronously |
-| `stream(prompt)` | Starts provider-supported streamed execution |
-| `add_tool(tool)` | Adds a tool when it is not already registered |
-| `remove_tool(tool)` | Removes a registered tool |
-| `set_context(key, value)` | Stores a runtime context value |
-| `get_context(key)` | Retrieves a runtime context value |
-| `clear_context()` | Clears runtime context |
-| `reset()` | Clears transient execution state while retaining configuration |
-| `to_dict()` | Returns a provider-neutral configuration dictionary |
+| Method                    | Purpose                                                        |
+|---------------------------|----------------------------------------------------------------|
+| `create()`                | Creates the provider-specific agent or runtime                 |
+| `run(prompt)`             | Executes the agent synchronously                               |
+| `run_async(prompt)`       | Executes the agent asynchronously                              |
+| `stream(prompt)`          | Starts provider-supported streamed execution                   |
+| `add_tool(tool)`          | Adds a tool when it is not already registered                  |
+| `remove_tool(tool)`       | Removes a registered tool                                      |
+| `set_context(key, value)` | Stores a runtime context value                                 |
+| `get_context(key)`        | Retrieves a runtime context value                              |
+| `clear_context()`         | Clears runtime context                                         |
+| `reset()`                 | Clears transient execution state while retaining configuration |
+| `to_dict()`               | Returns a provider-neutral configuration dictionary            |
 
 Provider methods return provider-native results. minions does not currently conceal response
 differences behind a normalized result model.
