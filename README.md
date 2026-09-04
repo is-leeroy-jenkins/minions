@@ -19,8 +19,6 @@ The current milestone provides:
 - Direct support for OpenAI-compatible tools, including `fonky.gpt.tools`.
 - Provider-native execution results.
 
-The `gemini`, `grok`, `claude`, and `mistral` namespaces are reserved for subsequent provider
-implementations. They do not yet export workflow agents.
 
 ## Installation
 
