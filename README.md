@@ -15,10 +15,15 @@ The current milestone provides:
 
 - The shared `minions.Minion` contract.
 - The OpenAI `minions.gpt.DataAgent` workflow agent.
+- The Mistral AI `minions.mistral.DataAgent` workflow agent.
 - Synchronous, asynchronous, and streamed OpenAI Agents SDK execution.
 - Direct support for OpenAI-compatible tools, including `fonky.gpt.tools`.
+- Synchronous and asynchronous Mistral agent execution with local function-tool handling.
+- Provider-native Mistral streaming.
 - Provider-native execution results.
 
+The `gemini`, `grok`, and `claude` namespaces are reserved for subsequent provider implementations.
+They do not yet export workflow agents.
 
 ## Installation
 
@@ -33,6 +38,12 @@ Configure the OpenAI credential before making live requests:
 
 ```powershell
 $env:OPENAI_API_KEY = "..."
+```
+
+Configure the Mistral credential before making Mistral requests:
+
+```powershell
+$env:MISTRAL_API_KEY = "..."
 ```
 
 ## OpenAI Data Workflow
@@ -76,6 +87,35 @@ async for event in stream.stream_events( ):
     print( event )
 ```
 
+## Mistral Data Workflow
+
+```python
+from fonky.mistral import tools
+from guro import instructions
+from minions.mistral import DataAgent
+
+
+agent = DataAgent(
+    name='Data Agent',
+    model='mistral-medium-latest',
+    instructions=instructions.get( 'DATA_SCIENTIST' ),
+    tools=[
+        tools.fetch_wikipedia,
+        tools.load_csv,
+    ],
+    max_turns=10,
+)
+
+result = agent.run( 'Analyze the available evidence and summarize the findings.' )
+print( result.choices[ 0 ].message.content )
+```
+
+Pass the callable Fonky operations directly. `DataAgent` creates the corresponding Mistral
+function schemas and executes requested tools during synchronous and asynchronous workflows.
+
+Mistral streaming returns the provider's native event stream. Function-call events in that stream
+remain available for caller-controlled execution.
+
 ## Package Boundaries
 
 | Package   | Responsibility                    |
@@ -102,3 +142,4 @@ Tests mock provider execution and do not consume API credits.
 - [fonky](https://github.com/is-leeroy-jenkins/fonky) - provider-compatible AI tools
 - [guro](https://github.com/is-leeroy-jenkins/guro) - reusable instruction library
 - [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
+- [Mistral AI Python SDK](https://github.com/mistralai/client-python)
