@@ -80,10 +80,10 @@ async for event in stream.stream_events( ):
 
 ## Package Boundaries
 
-| Package | Responsibility |
-|---|---|
-| `guro` | Reusable instruction strings |
-| `fonky` | Provider-compatible tools |
+| Package   | Responsibility                    |
+|-----------|-----------------------------------|
+| `guro`    | Reusable instruction strings      |
+| `fonky`   | Provider-compatible tools         |
 | `minions` | Provider-specific workflow agents |
 
 Minions does not convert tools between providers and does not normalize provider-native results.
