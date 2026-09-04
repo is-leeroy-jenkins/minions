@@ -1,4 +1,5 @@
-﻿openai-agents
+openai-agents
+mistralai[agents]
 google-adk
 xai-sdk
 claude-agent-sdk
