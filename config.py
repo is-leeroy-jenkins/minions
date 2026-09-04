@@ -206,3 +206,8 @@ GROK_MODELS = [ 'grok-4.6', 'grok-4.5', 'grok-4.3', 'grok-4.20-multi-agent',
 CLAUDE_MODELS = [ 'claude-fable-5', 'claude-opus-5', 'claude-opus-4-8', 'claude-opus-4-7',
 		'claude-opus-4-6', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-sonnet-4-5-20250929',
 		'claude-haiku-4-5-20251001', ]
+
+MISTRAL_MODELS = [ 'mistral-medium-latest', 'mistral-large-latest',
+        'mistral-small-latest', 'codestral-latest',
+        'ministral-14b-latest', 'ministral-8b-latest',
+        'ministral-3b-latest', ]

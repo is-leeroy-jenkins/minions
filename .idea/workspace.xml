@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c2e805f8-c9aa-46f2-b14f-01ddfdd40399" name="Changes" comment="updates">
-      <change afterPath="$PROJECT_DIR$/__ini__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mistral/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/claude/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/claude/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gemini/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gemini/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gpt/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gpt/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grok/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/grok/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__ini__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,7 +223,7 @@
       <workItem from="1788457762995" duration="220000" />
       <workItem from="1788458041446" duration="54000" />
       <workItem from="1788475201718" duration="2449000" />
-      <workItem from="1788485277326" duration="500000" />
+      <workItem from="1788485277326" duration="1334000" />
     </task>
     <task id="LOCAL-00001" summary="updates">
       <option name="closed" value="true" />
@@ -312,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788458085390</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="updates">
+      <option name="closed" value="true" />
+      <created>1788485880813</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1788485880813</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
