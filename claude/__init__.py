@@ -43,4 +43,8 @@
 '''
 from __future__ import annotations
 
-__all__: list[ str ] = [ ]
+from .agents import DataAgent
+
+__all__: list[ str ] = [
+    'DataAgent',
+]

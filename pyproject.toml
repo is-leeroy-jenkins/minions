@@ -9,8 +9,11 @@ description = "Reusable provider-specific AI workflow agents."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "anthropic",
+    "google-adk",
     "mistralai[agents]",
     "openai-agents",
+    "xai-sdk",
 ]
 
 [project.urls]
