@@ -1,0 +1,130 @@
+:root {
+  --minions-bg: #0b1020;
+  --minions-surface: #111a2e;
+  --minions-surface-2: #17233b;
+  --minions-border: #2b3c5c;
+  --minions-text: #edf4ff;
+  --minions-muted: #a9b8d0;
+  --minions-blue: #55a7ff;
+  --minions-purple: #a77bff;
+  --minions-green: #54d6a0;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: var(--minions-bg);
+  --md-default-fg-color: var(--minions-text);
+  --md-default-fg-color--light: var(--minions-muted);
+  --md-primary-fg-color: #080c16;
+  --md-accent-fg-color: var(--minions-blue);
+  --md-typeset-a-color: var(--minions-blue);
+  --md-code-bg-color: #080d18;
+}
+
+.md-grid {
+  max-width: 92rem;
+}
+
+.md-header,
+.md-tabs {
+  background: rgba( 8, 12, 22, 0.96 );
+  border-bottom: 1px solid var(--minions-border);
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  color: var(--minions-text);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h1 {
+  margin-bottom: 1rem;
+}
+
+.md-typeset a:hover {
+  color: var(--minions-green);
+}
+
+.md-typeset .md-button {
+  border-color: var(--minions-blue);
+  border-radius: 0.55rem;
+}
+
+.md-typeset .md-button--primary {
+  background: linear-gradient( 135deg, var(--minions-blue), var(--minions-purple) );
+  border: 0;
+  color: #07101e;
+  font-weight: 700;
+}
+
+.md-typeset table:not([class]) {
+  background: var(--minions-surface);
+  border: 1px solid var(--minions-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  background: #17345b;
+  color: #ffffff;
+}
+
+.md-typeset table:not([class]) td {
+  border-top-color: var(--minions-border);
+}
+
+.md-typeset code {
+  border: 1px solid rgba( 85, 167, 255, 0.18 );
+}
+
+.md-typeset pre > code {
+  border: 0;
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--minions-surface);
+  border-color: var(--minions-blue);
+}
+
+.minions-hero {
+  display: block;
+  width: min( 100%, 960px );
+  margin: 0 auto 2rem;
+  border-radius: 0.85rem;
+  box-shadow: 0 1.1rem 3rem rgba( 0, 0, 0, 0.35 );
+}
+
+.minions-diagram {
+  display: block;
+  width: min( 100%, 1100px );
+  margin: 2rem auto;
+  border: 1px solid var(--minions-border);
+  border-radius: 0.85rem;
+  box-shadow: 0 1rem 2.5rem rgba( 0, 0, 0, 0.3 );
+}
+
+.doc-heading code,
+.doc-signature code {
+  color: var(--minions-green);
+}
+
+.md-footer {
+  border-top: 1px solid var(--minions-border);
+}
+
+.minions-code-language {
+  position: absolute;
+  top: 0.35rem;
+  right: 2.9rem;
+  color: var(--minions-muted);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.highlight {
+  position: relative;
+}
