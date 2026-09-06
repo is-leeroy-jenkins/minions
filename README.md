@@ -8,7 +8,29 @@ translates or mixes tools between providers.
 
 ## Design
 
-Each flat provider module exports `Minion` and `DataMinion`:
+Each flat provider module exports its provider-local `Minion` and the same concrete workflow
+implementations:
+
+| Guro category | Concrete implementation |
+|---|---|
+| Research / Academic | `ResearchMinion` |
+| Writing / Administrative | `WritingMinion` |
+| Compliance / Legal / Budget | `ComplianceMinion` |
+| Business / Finance / Marketing | `BusinessMinion` |
+| Software Engineering; Software Engineer | `CodingMinion` |
+| Data Analytics & Governance | `DataMinion` |
+| Instruction / Training / Planning | `PlanningMinion` |
+| Image Generation | `ImageGenerationMinion` |
+| Image Analysis | `ImageAnalysisMinion` |
+| Image Editing | `ImageEditingMinion` |
+| Translation API | `TranslationMinion` |
+| Transcription API | `TranscriptionMinion` |
+| Speech API | `SpeechMinion` |
+
+The Guro Prompt Engineering category is intentionally excluded. The two software labels share
+`CodingMinion` because they represent the same workflow family. Each class is a reusable template;
+individual prompts within its Guro category plug in through `instructions` without creating one
+class per prompt.
 
 | Provider module | Native design | Complete execution |
 |---|---|---|
@@ -18,11 +40,30 @@ Each flat provider module exports `Minion` and `DataMinion`:
 | `minions.claude` | wraps Anthropic tool runners | sync, async, stream |
 | `minions.mistral` | wraps a Mistral remote Agent | sync, async, stream |
 
-`DataMinion` inherits its provider's `Minion`. There is no cross-provider abstract base class.
-Tools are optional for every provider. OpenAI, Gemini, and Claude execute provider-native tools
-directly. Grok and Mistral accept provider schemas and matching local functions; when supplied,
-the two name sets must match exactly. Their streaming methods execute requested tools and resume
-streaming until the model finishes.
+Every concrete implementation inherits its provider's `Minion` and receives its behavior from the
+selected model, Guro instructions, provider-native tools, and execution limits. There is no factory
+function, registry, or cross-provider abstract base class. Tools are optional for every provider.
+OpenAI, Gemini, and Claude execute provider-native tools directly. Grok and Mistral accept provider
+schemas and matching local functions; when supplied, the two name sets must match exactly. Their
+streaming methods execute requested tools and resume streaming until the model finishes.
+
+Select the concrete implementation that describes the workflow and pair it with the appropriate
+Guro instructions:
+
+```python
+from guro import instructions
+from minions.gpt import CodingMinion, ResearchMinion
+
+
+coder = CodingMinion(
+    model='gpt-5.6-sol',
+    instructions=instructions.get( 'SENIOR_ENGINEER' ),
+)
+researcher = ResearchMinion(
+    model='gpt-5.6-sol',
+    instructions=instructions.get( 'DEEP_RESEARCH_AGENT' ),
+)
+```
 
 ## Installation
 

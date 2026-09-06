@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import AsyncIterator, Callable, Sequence
+from typing import ClassVar
 from uuid import uuid4
 import re
 
@@ -24,6 +25,7 @@ GeminiTool = Callable[ ..., object ] | BaseTool | BaseToolset
 class Minion( Agent ):
     """Provider-native Gemini workflow agent."""
 
+    minion_name: ClassVar[ str ] = 'General Minion'
     display_name: str
     max_turns: int = 10
     prompt: str = ''
@@ -31,28 +33,30 @@ class Minion( Agent ):
     events: list[ Event ] = Field( default_factory=list )
 
 
-    def __init__( self, name: str, model: str, instructions: str,
-            tools: Sequence[ GeminiTool ] | None=None, max_turns: int=10 ) -> None:
+    def __init__( self, model: str, instructions: str,
+            tools: Sequence[ GeminiTool ] | None=None, max_turns: int=10,
+            name: str | None=None ) -> None:
         """Initialize a Gemini Minion.
 
         Args:
-            name (str): Human-readable agent name.
             model (str): Gemini model identifier.
             instructions (str): System instructions for the agent.
             tools (Sequence[GeminiTool] | None): Optional Google ADK tools.
             max_turns (int): Maximum model calls per execution.
+            name (str | None): Optional name overriding the implementation default.
 
         Returns:
             None: Configuration is stored on the provider-native agent.
         """
-        throw_if( 'name', name )
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
         throw_if_less_than( 'max_turns', max_turns, 1 )
-        provider_name = self.normalize_name( name )
+        display_name = name or self.minion_name
+        throw_if( 'name', display_name )
+        provider_name = self.normalize_name( display_name )
         super( ).__init__(
             name=provider_name,
-            display_name=name,
+            display_name=display_name,
             model=model,
             instruction=instructions,
             tools=list( tools or [ ] ),
@@ -192,23 +196,95 @@ class Minion( Agent ):
 class DataMinion( Minion ):
     """Gemini Minion specialized for data workflows."""
 
-
-    def __init__( self, model: str, instructions: str,
-            tools: Sequence[ GeminiTool ] | None=None, max_turns: int=10,
-            name: str='Data Minion' ) -> None:
-        """Initialize a Gemini data Minion.
-
-        Args:
-            model (str): Gemini model identifier.
-            instructions (str): Data-workflow instructions.
-            tools (Sequence[GeminiTool] | None): Optional Google ADK tools.
-            max_turns (int): Maximum model calls per execution.
-            name (str): Human-readable agent name.
-
-        Returns:
-            None: Configuration is stored on the provider-native agent.
-        """
-        super( ).__init__( name, model, instructions, tools, max_turns )
+    minion_name: ClassVar[ str ] = 'Data Minion'
 
 
-__all__: list[ str ] = [ 'DataMinion', 'GeminiTool', 'Minion' ]
+class ResearchMinion( Minion ):
+    """Gemini Minion specialized for research workflows."""
+
+    minion_name: ClassVar[ str ] = 'Research Minion'
+
+
+class CodingMinion( Minion ):
+    """Gemini Minion specialized for software workflows."""
+
+    minion_name: ClassVar[ str ] = 'Coding Minion'
+
+
+class WritingMinion( Minion ):
+    """Gemini Minion specialized for writing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Writing Minion'
+
+
+class PlanningMinion( Minion ):
+    """Gemini Minion specialized for planning workflows."""
+
+    minion_name: ClassVar[ str ] = 'Planning Minion'
+
+
+class ComplianceMinion( Minion ):
+    """Gemini Minion specialized for compliance, legal, and budget workflows."""
+
+    minion_name: ClassVar[ str ] = 'Compliance Minion'
+
+
+class BusinessMinion( Minion ):
+    """Gemini Minion specialized for business, finance, and marketing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Business Minion'
+
+
+class ImageGenerationMinion( Minion ):
+    """Gemini Minion specialized for image-generation workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Generation Minion'
+
+
+class ImageAnalysisMinion( Minion ):
+    """Gemini Minion specialized for image-analysis workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Analysis Minion'
+
+
+class ImageEditingMinion( Minion ):
+    """Gemini Minion specialized for image-editing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Editing Minion'
+
+
+class TranslationMinion( Minion ):
+    """Gemini Minion specialized for translation workflows."""
+
+    minion_name: ClassVar[ str ] = 'Translation Minion'
+
+
+class TranscriptionMinion( Minion ):
+    """Gemini Minion specialized for transcription workflows."""
+
+    minion_name: ClassVar[ str ] = 'Transcription Minion'
+
+
+class SpeechMinion( Minion ):
+    """Gemini Minion specialized for speech workflows."""
+
+    minion_name: ClassVar[ str ] = 'Speech Minion'
+
+
+__all__: list[ str ] = [
+    'BusinessMinion',
+    'CodingMinion',
+    'ComplianceMinion',
+    'DataMinion',
+    'GeminiTool',
+    'ImageAnalysisMinion',
+    'ImageEditingMinion',
+    'ImageGenerationMinion',
+    'Minion',
+    'PlanningMinion',
+    'ResearchMinion',
+    'SpeechMinion',
+    'TranscriptionMinion',
+    'TranslationMinion',
+    'WritingMinion',
+]

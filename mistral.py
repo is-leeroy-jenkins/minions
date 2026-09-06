@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Iterator, Sequence
 from inspect import isawaitable, iscoroutinefunction
-from typing import TypedDict, cast
+from typing import ClassVar, TypedDict, cast
 import asyncio
 import json
 import os
@@ -46,30 +46,31 @@ class AggregatedResponse( TypedDict ):
 class Minion:
     """Mistral workflow agent with complete local tool execution."""
 
+    minion_name: ClassVar[ str ] = 'General Minion'
 
-    def __init__( self, name: str, model: str, instructions: str,
+    def __init__( self, model: str, instructions: str,
             tools: Sequence[ MistralTool ] | None=None,
             functions: Sequence[ ToolFunction ] | None=None, max_turns: int=10,
-            api_key: str | None=None ) -> None:
+            api_key: str | None=None, name: str | None=None ) -> None:
         """Initialize a Mistral Minion and its remote agent resource.
 
         Args:
-            name (str): Human-readable agent name.
             model (str): Mistral model identifier.
             instructions (str): System instructions for the agent.
             tools (Sequence[MistralTool] | None): Optional Mistral tool schemas.
             functions (Sequence[ToolFunction] | None): Optional matching local callables.
             max_turns (int): Maximum model turns per execution.
             api_key (str | None): Optional Mistral API key override.
+            name (str | None): Optional name overriding the implementation default.
 
         Returns:
             None: Configuration, client, and remote agent are stored.
         """
-        throw_if( 'name', name )
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
         throw_if_less_than( 'max_turns', max_turns, 1 )
-        self.name = name
+        self.name = name or self.minion_name
+        throw_if( 'name', self.name )
         self.model = model
         self.instructions = instructions
         self.tools = list( tools or [ ] )
@@ -331,28 +332,96 @@ class Minion:
 class DataMinion( Minion ):
     """Mistral Minion specialized for data workflows."""
 
-
-    def __init__( self, model: str, instructions: str,
-            tools: Sequence[ MistralTool ] | None=None,
-            functions: Sequence[ ToolFunction ] | None=None, max_turns: int=10,
-            api_key: str | None=None, name: str='Data Minion' ) -> None:
-        """Initialize a Mistral data Minion.
-
-        Args:
-            model (str): Mistral model identifier.
-            instructions (str): Data-workflow instructions.
-            tools (Sequence[MistralTool] | None): Optional Mistral tool schemas.
-            functions (Sequence[ToolFunction] | None): Optional matching callables.
-            max_turns (int): Maximum model turns per execution.
-            api_key (str | None): Optional Mistral API key override.
-            name (str): Human-readable agent name.
-
-        Returns:
-            None: Configuration, client, and remote agent are stored.
-        """
-        super( ).__init__(
-            name, model, instructions, tools, functions, max_turns, api_key
-        )
+    minion_name: ClassVar[ str ] = 'Data Minion'
 
 
-__all__: list[ str ] = [ 'DataMinion', 'Minion', 'MistralTool', 'ToolFunction' ]
+class ResearchMinion( Minion ):
+    """Mistral Minion specialized for research workflows."""
+
+    minion_name: ClassVar[ str ] = 'Research Minion'
+
+
+class CodingMinion( Minion ):
+    """Mistral Minion specialized for software workflows."""
+
+    minion_name: ClassVar[ str ] = 'Coding Minion'
+
+
+class WritingMinion( Minion ):
+    """Mistral Minion specialized for writing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Writing Minion'
+
+
+class PlanningMinion( Minion ):
+    """Mistral Minion specialized for planning workflows."""
+
+    minion_name: ClassVar[ str ] = 'Planning Minion'
+
+
+class ComplianceMinion( Minion ):
+    """Mistral Minion specialized for compliance, legal, and budget workflows."""
+
+    minion_name: ClassVar[ str ] = 'Compliance Minion'
+
+
+class BusinessMinion( Minion ):
+    """Mistral Minion specialized for business, finance, and marketing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Business Minion'
+
+
+class ImageGenerationMinion( Minion ):
+    """Mistral Minion specialized for image-generation workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Generation Minion'
+
+
+class ImageAnalysisMinion( Minion ):
+    """Mistral Minion specialized for image-analysis workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Analysis Minion'
+
+
+class ImageEditingMinion( Minion ):
+    """Mistral Minion specialized for image-editing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Editing Minion'
+
+
+class TranslationMinion( Minion ):
+    """Mistral Minion specialized for translation workflows."""
+
+    minion_name: ClassVar[ str ] = 'Translation Minion'
+
+
+class TranscriptionMinion( Minion ):
+    """Mistral Minion specialized for transcription workflows."""
+
+    minion_name: ClassVar[ str ] = 'Transcription Minion'
+
+
+class SpeechMinion( Minion ):
+    """Mistral Minion specialized for speech workflows."""
+
+    minion_name: ClassVar[ str ] = 'Speech Minion'
+
+
+__all__: list[ str ] = [
+    'BusinessMinion',
+    'CodingMinion',
+    'ComplianceMinion',
+    'DataMinion',
+    'ImageAnalysisMinion',
+    'ImageEditingMinion',
+    'ImageGenerationMinion',
+    'Minion',
+    'MistralTool',
+    'PlanningMinion',
+    'ResearchMinion',
+    'SpeechMinion',
+    'ToolFunction',
+    'TranscriptionMinion',
+    'TranslationMinion',
+    'WritingMinion',
+]
