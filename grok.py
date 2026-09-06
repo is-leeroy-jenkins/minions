@@ -43,7 +43,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
 from inspect import isawaitable, iscoroutinefunction
-from typing import overload, Dict
+from typing import overload
 import asyncio
 import json
 import os
@@ -274,7 +274,7 @@ class Minion:
 
 
     @staticmethod
-    def parse_arguments( arguments: str ) -> Dict[ str, object ]:
+    def parse_arguments( arguments: str ) -> dict[ str, object ]:
         """Parse and validate model-supplied JSON arguments.
 
         Args:
