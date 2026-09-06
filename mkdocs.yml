@@ -9,8 +9,8 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: en
-  logo: img/minions-project.png
-  favicon: img/minions-project.png
+  logo: img/minion-symbol.png
+  favicon: img/minion-symbol.png
   palette:
     scheme: slate
     primary: black
