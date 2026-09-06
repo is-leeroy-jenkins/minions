@@ -32,6 +32,8 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
+          # The repository root contains the package's flat source modules.
+          # Collect them directly so documentation builds before editable installation.
           paths: [ . ]
           options:
             docstring_style: google
