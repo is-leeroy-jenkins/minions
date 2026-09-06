@@ -49,7 +49,11 @@ from mistralai.client.models import (
     ChatCompletionResponse,
     CompletionChunk,
     CompletionEvent,
+    CodeInterpreterTool,
+    DocumentLibraryTool,
+    ImageGenerationTool,
     ToolCall,
+    WebSearchTool,
 )
 
 from minions.mistral import DataMinion
@@ -101,6 +105,26 @@ def requested_call( ) -> ToolCall:
         'type': 'function',
         'function': { 'name': 'sample_tool', 'arguments': '{"value":"records"}' },
     } )
+
+
+@patch( 'minions.mistral.Mistral' )
+def test_mistral_native_tools_do_not_require_local_functions(
+        client_type: Mock ) -> None:
+    '''Verify every supported Mistral-hosted tool bypasses local function validation.'''
+    tools = [
+        WebSearchTool( ),
+        CodeInterpreterTool( ),
+        ImageGenerationTool( ),
+        DocumentLibraryTool( library_ids=[ 'library-id' ] ),
+    ]
+    minion = DataMinion(
+        model='mistral-test', instructions='Analyze data.', tools=tools,
+        api_key='test-key'
+    )
+
+    assert minion.tools == tools
+    assert minion.functions == { }
+    assert client_type.return_value.beta.agents.create.call_args.kwargs[ 'tools' ] == tools
 
 
 @patch( 'minions.mistral.Mistral' )

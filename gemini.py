@@ -50,7 +50,7 @@ from google.adk.agents import RunConfig
 from google.adk.agents.run_config import StreamingMode
 from google.adk.events import Event
 from google.adk.sessions import InMemorySessionService
-from google.adk.tools import BaseTool
+from google.adk.tools import BaseTool, VertexAiSearchTool, google_search, url_context
 from google.adk.tools.base_toolset import BaseToolset
 from google.genai import types
 from pydantic import Field
@@ -305,4 +305,5 @@ class SpeechMinion( Minion ):
 __all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
         'GovernanceMinion', 'GeminiTool', 'ImageAnalysisMinion', 'ImageEditingMinion',
         'ImageGenerationMinion', 'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion',
-        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]
+        'TranscriptionMinion', 'TranslationMinion', 'VertexAiSearchTool', 'WritingMinion',
+        'google_search', 'url_context', ]

@@ -51,9 +51,19 @@ from anthropic.lib.tools import (
     BetaAsyncStreamingToolRunner,
     BetaFunctionTool,
 )
-from anthropic.types.beta import BetaMessage
+from anthropic.types.beta import (
+    BetaCodeExecutionTool20260521Param,
+    BetaMessage,
+    BetaToolUnionParam,
+    BetaWebFetchTool20260318Param,
+    BetaWebSearchTool20260318Param,
+)
 
 from . import throw_if
+
+
+ClaudeTool = BetaFunctionTool | BetaToolUnionParam
+ClaudeAsyncTool = BetaAsyncFunctionTool | BetaToolUnionParam
 
 
 class Minion:
@@ -62,7 +72,7 @@ class Minion:
     minion_name: str = 'Claude Minion'
 
     def __init__( self, model: str, instructions: str,
-            tools: Sequence[ BetaFunctionTool ] | None=None, max_turns: int=10,
+            tools: Sequence[ ClaudeTool ] | None=None, max_turns: int=10,
             max_tokens: int=4096, api_key: str | None=None,
             name: str | None=None ) -> None:
         """Initialize a Claude Minion.
@@ -70,7 +80,7 @@ class Minion:
         Args:
             model (str): Claude model identifier.
             instructions (str): System instructions for the agent.
-            tools (Sequence[BetaFunctionTool] | None): Optional Anthropic beta tools.
+            tools (Sequence[ClaudeTool] | None): Optional Anthropic local or server tools.
             max_turns (int): Maximum model iterations per execution.
             max_tokens (int): Maximum output tokens per model iteration.
             api_key (str | None): Optional Anthropic API key override.
@@ -94,9 +104,10 @@ class Minion:
         self.max_tokens = max_tokens
         self.api_key = api_key or os.getenv( 'ANTHROPIC_API_KEY' )
         throw_if( 'api_key', self.api_key )
-        if not all( isinstance( tool, BetaFunctionTool ) for tool in self.tools ):
-            raise TypeError( 'Argument "tools" must contain Anthropic beta tools!' )
-        self.async_tools = [ self.create_async_tool( tool ) for tool in self.tools ]
+        self.async_tools: list[ ClaudeAsyncTool ] = [
+            self.create_async_tool( tool ) if isinstance( tool, BetaFunctionTool ) else tool
+            for tool in self.tools
+        ]
         self.client = Anthropic( api_key=self.api_key )
         self.async_client = AsyncAnthropic( api_key=self.api_key )
         self.result: BetaMessage | BetaAsyncStreamingToolRunner[ object ] | None = None
@@ -267,7 +278,9 @@ class SpeechMinion( Minion ):
 
     minion_name: str = 'Speech Minion'
 
-__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
-        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
-        'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'TranscriptionMinion',
-        'TranslationMinion', 'WritingMinion', ]
+__all__: list[ str ] = [ 'BetaCodeExecutionTool20260521Param',
+        'BetaWebFetchTool20260318Param', 'BetaWebSearchTool20260318Param', 'BusinessMinion',
+        'ClaudeAsyncTool', 'ClaudeTool', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
+        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion',
+        'ImageGenerationMinion', 'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion',
+        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]

@@ -45,14 +45,52 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from anthropic import beta_tool
+from anthropic.types.beta import BetaToolUnionParam
 
-from minions.claude import DataMinion
+from minions.claude import (
+    BetaCodeExecutionTool20260521Param,
+    BetaWebFetchTool20260318Param,
+    BetaWebSearchTool20260318Param,
+    DataMinion,
+)
 
 
 @beta_tool
 def sample_tool( value: str ) -> str:
     '''Return a sample result.'''
     return value
+
+
+@patch( 'minions.claude.AsyncAnthropic' )
+@patch( 'minions.claude.Anthropic' )
+def test_claude_server_tools_are_retained( client_type: Mock,
+        async_client_type: Mock ) -> None:
+    '''Verify Anthropic server tools remain unchanged for sync and async runners.'''
+    tools: list[ BetaToolUnionParam ] = [
+        BetaWebSearchTool20260318Param(
+            type='web_search_20260318', name='web_search'
+        ),
+        BetaWebFetchTool20260318Param(
+            type='web_fetch_20260318', name='web_fetch'
+        ),
+        BetaCodeExecutionTool20260521Param(
+            type='code_execution_20260521', name='code_execution'
+        ),
+    ]
+    minion = DataMinion(
+        model='claude-test', instructions='Analyze data.', tools=tools,
+        api_key='test-key'
+    )
+
+    assert minion.tools == tools
+    assert minion.async_tools == tools
+
+    minion.run( 'Inspect this.' )
+    assert client_type.return_value.beta.messages.tool_runner.call_args.kwargs[ 'tools' ] == tools
+
+    minion.stream( 'Inspect this.' )
+    assert async_client_type.return_value.beta.messages.tool_runner.call_args.kwargs[ 'tools' ] \
+        == tools
 
 
 @patch( 'minions.claude.AsyncAnthropic' )

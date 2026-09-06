@@ -45,7 +45,31 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
-from minions.gpt import DataMinion
+from minions.gpt import (
+    CodeInterpreterTool,
+    DataMinion,
+    FileSearchTool,
+    ImageGenerationTool,
+    WebSearchTool,
+)
+
+
+def test_openai_native_tools_are_retained( ) -> None:
+    '''Verify every supported OpenAI-hosted tool reaches the native Agent unchanged.'''
+    tools = [
+        WebSearchTool( ),
+        FileSearchTool( vector_store_ids=[ 'vector-store-id' ] ),
+        CodeInterpreterTool( tool_config={
+            'type': 'code_interpreter',
+            'container': { 'type': 'auto' },
+        } ),
+        ImageGenerationTool( tool_config={ 'type': 'image_generation' } ),
+    ]
+    minion = DataMinion(
+        model='gpt-test', instructions='Analyze data.', tools=tools
+    )
+
+    assert minion.tools == tools
 
 
 @patch( 'minions.gpt.Runner.run_sync' )

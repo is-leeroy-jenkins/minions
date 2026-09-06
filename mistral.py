@@ -55,11 +55,15 @@ from mistralai.client.models import (
     ChatCompletionResponse,
     CompletionChunk,
     CompletionEvent,
+    CodeInterpreterTool,
     CreateAgentRequestTool,
     CreateAgentRequestToolTypedDict,
+    DocumentLibraryTool,
+    ImageGenerationTool,
     ToolCall,
     ToolMessage,
     UserMessage,
+    WebSearchTool,
 )
 from mistralai.extra.observability.streaming import accumulate_chunks_to_response_dict
 
@@ -452,7 +456,9 @@ class SpeechMinion( Minion ):
 
     minion_name: str = 'Speech Minion'
 
-__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
-        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
-        'Minion', 'MistralTool', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'ToolFunction',
-        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodeInterpreterTool', 'CodingMinion',
+        'ComplianceMinion', 'DataMinion', 'DocumentLibraryTool', 'GovernanceMinion',
+        'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
+        'ImageGenerationTool', 'Minion', 'MistralTool', 'PlanningMinion', 'ResearchMinion',
+        'SpeechMinion', 'ToolFunction', 'TranscriptionMinion', 'TranslationMinion',
+        'WebSearchTool', 'WritingMinion', ]
