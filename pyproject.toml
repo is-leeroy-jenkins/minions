@@ -4,38 +4,26 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "minions"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reusable provider-specific AI workflow agents."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "anthropic",
-    "google-adk",
-    "mistralai[agents]",
-    "openai-agents",
-    "xai-sdk",
+    "anthropic>=1.4,<2",
+    "google-adk>=2.8,<3",
+    "mistralai[agents]>=2.9,<3",
+    "openai-agents>=0.22,<1",
+    "xai-sdk>=1.19,<2",
 ]
 
 [project.urls]
 Repository = "https://github.com/is-leeroy-jenkins/minions"
 
 [tool.setuptools]
-packages = [
-    "minions",
-    "minions.claude",
-    "minions.gemini",
-    "minions.gpt",
-    "minions.grok",
-    "minions.mistral",
-]
+packages = [ "minions" ]
 
 [tool.setuptools.package-dir]
 minions = "."
-"minions.claude" = "claude"
-"minions.gemini" = "gemini"
-"minions.gpt" = "gpt"
-"minions.grok" = "grok"
-"minions.mistral" = "mistral"
 
 [tool.pytest.ini_options]
 testpaths = [ "tests" ]
