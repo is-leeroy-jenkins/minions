@@ -15,6 +15,9 @@
 
 ___
 
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-0078FC?style=for-the-badge&logo=github)](https://is-leeroy-jenkins.github.io/minions[mkdocs.yml](../../../Desktop/minions-documentation/mkdocs.yml)
+[docs](../../../Desktop/minions-documentation/docs)/)
+
 Provider-native AI agents organized as reusable workflow-specific `Minion` classes.
 
 ![](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/images/minions-workflow.png)
