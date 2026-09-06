@@ -8,7 +8,17 @@ translates or mixes tools between providers.
 
 ## Design
 
-Each flat provider module exports `Minion` and `DataMinion`:
+Each flat provider module exports its provider-local `Minion` and the same concrete workflow
+implementations:
+
+| Concrete implementation | Workflow purpose |
+|---|---|
+| `DataMinion` | Data analysis, transformation, statistics, and visualization |
+| `ResearchMinion` | Source discovery, retrieval, synthesis, and evidence review |
+| `CodingMinion` | Software engineering, debugging, testing, and code review |
+| `WritingMinion` | Drafting, editing, summarization, and documentation |
+| `PlanningMinion` | Project, task, process, and implementation planning |
+| `ReviewMinion` | Evaluation, compliance, quality assurance, and red-team review |
 
 | Provider module | Native design | Complete execution |
 |---|---|---|
@@ -18,11 +28,30 @@ Each flat provider module exports `Minion` and `DataMinion`:
 | `minions.claude` | wraps Anthropic tool runners | sync, async, stream |
 | `minions.mistral` | wraps a Mistral remote Agent | sync, async, stream |
 
-`DataMinion` inherits its provider's `Minion`. There is no cross-provider abstract base class.
-Tools are optional for every provider. OpenAI, Gemini, and Claude execute provider-native tools
-directly. Grok and Mistral accept provider schemas and matching local functions; when supplied,
-the two name sets must match exactly. Their streaming methods execute requested tools and resume
-streaming until the model finishes.
+Every concrete implementation inherits its provider's `Minion` and receives its behavior from the
+selected model, Guro instructions, provider-native tools, and execution limits. There is no factory
+function, registry, or cross-provider abstract base class. Tools are optional for every provider.
+OpenAI, Gemini, and Claude execute provider-native tools directly. Grok and Mistral accept provider
+schemas and matching local functions; when supplied, the two name sets must match exactly. Their
+streaming methods execute requested tools and resume streaming until the model finishes.
+
+Select the concrete implementation that describes the workflow and pair it with the appropriate
+Guro instructions:
+
+```python
+from guro import instructions
+from minions.gpt import CodingMinion, ResearchMinion
+
+
+coder = CodingMinion(
+    model='gpt-5.6-sol',
+    instructions=instructions.get( 'SENIOR_ENGINEER' ),
+)
+researcher = ResearchMinion(
+    model='gpt-5.6-sol',
+    instructions=instructions.get( 'DEEP_RESEARCH_AGENT' ),
+)
+```
 
 ## Installation
 

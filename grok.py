@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
 from inspect import isawaitable, iscoroutinefunction
-from typing import overload
+from typing import ClassVar, overload
 import asyncio
 import json
 import os
@@ -23,30 +23,31 @@ ToolFunction = Callable[ ..., object | Awaitable[ object ] ]
 class Minion:
     """Grok workflow agent backed by xAI client-side tool calling."""
 
+    minion_name: ClassVar[ str ] = 'General Minion'
 
-    def __init__( self, name: str, model: str, instructions: str,
+    def __init__( self, model: str, instructions: str,
             tools: Sequence[ chat_pb2.Tool ] | None=None,
             functions: Sequence[ ToolFunction ] | None=None, max_turns: int=10,
-            api_key: str | None=None ) -> None:
+            api_key: str | None=None, name: str | None=None ) -> None:
         """Initialize a Grok Minion.
 
         Args:
-            name (str): Human-readable agent name.
             model (str): Grok model identifier.
             instructions (str): System instructions for the agent.
             tools (Sequence[chat_pb2.Tool] | None): Optional xAI tool schemas.
             functions (Sequence[ToolFunction] | None): Optional matching tool callables.
             max_turns (int): Maximum model turns per execution.
             api_key (str | None): Optional xAI API key override.
+            name (str | None): Optional name overriding the implementation default.
 
         Returns:
             None: Configuration and native clients are stored.
         """
-        throw_if( 'name', name )
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
         throw_if_less_than( 'max_turns', max_turns, 1 )
-        self.name = name
+        self.name = name or self.minion_name
+        throw_if( 'name', self.name )
         self.model = model
         self.instructions = instructions
         self.tools = list( tools or [ ] )
@@ -261,28 +262,46 @@ class Minion:
 class DataMinion( Minion ):
     """Grok Minion specialized for data workflows."""
 
-
-    def __init__( self, model: str, instructions: str,
-            tools: Sequence[ chat_pb2.Tool ] | None=None,
-            functions: Sequence[ ToolFunction ] | None=None, max_turns: int=10,
-            api_key: str | None=None, name: str='Data Minion' ) -> None:
-        """Initialize a Grok data Minion.
-
-        Args:
-            model (str): Grok model identifier.
-            instructions (str): Data-workflow instructions.
-            tools (Sequence[chat_pb2.Tool] | None): Optional xAI tool schemas.
-            functions (Sequence[ToolFunction] | None): Optional matching callables.
-            max_turns (int): Maximum model turns per execution.
-            api_key (str | None): Optional xAI API key override.
-            name (str): Human-readable agent name.
-
-        Returns:
-            None: Configuration and native clients are stored.
-        """
-        super( ).__init__(
-            name, model, instructions, tools, functions, max_turns, api_key
-        )
+    minion_name: ClassVar[ str ] = 'Data Minion'
 
 
-__all__: list[ str ] = [ 'DataMinion', 'Minion', 'ToolFunction' ]
+class ResearchMinion( Minion ):
+    """Grok Minion specialized for research workflows."""
+
+    minion_name: ClassVar[ str ] = 'Research Minion'
+
+
+class CodingMinion( Minion ):
+    """Grok Minion specialized for software workflows."""
+
+    minion_name: ClassVar[ str ] = 'Coding Minion'
+
+
+class WritingMinion( Minion ):
+    """Grok Minion specialized for writing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Writing Minion'
+
+
+class PlanningMinion( Minion ):
+    """Grok Minion specialized for planning workflows."""
+
+    minion_name: ClassVar[ str ] = 'Planning Minion'
+
+
+class ReviewMinion( Minion ):
+    """Grok Minion specialized for review workflows."""
+
+    minion_name: ClassVar[ str ] = 'Review Minion'
+
+
+__all__: list[ str ] = [
+    'CodingMinion',
+    'DataMinion',
+    'Minion',
+    'PlanningMinion',
+    'ResearchMinion',
+    'ReviewMinion',
+    'ToolFunction',
+    'WritingMinion',
+]

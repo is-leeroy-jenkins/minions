@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from typing import ClassVar
 
 from agents import Agent, RunResult, RunResultStreaming, Runner, Tool
 
@@ -11,30 +12,33 @@ from . import throw_if, throw_if_less_than
 class Minion( Agent ):
     """Provider-native OpenAI workflow agent."""
 
+    minion_name: ClassVar[ str ] = 'General Minion'
     max_turns: int
     result: RunResult | RunResultStreaming | None
 
 
-    def __init__( self, name: str, model: str, instructions: str,
-            tools: Sequence[ Tool ] | None=None, max_turns: int=10 ) -> None:
+    def __init__( self, model: str, instructions: str,
+            tools: Sequence[ Tool ] | None=None, max_turns: int=10,
+            name: str | None=None ) -> None:
         """Initialize an OpenAI Minion.
 
         Args:
-            name (str): Human-readable agent name.
             model (str): OpenAI model identifier.
             instructions (str): System instructions for the agent.
             tools (Sequence[Tool] | None): Optional OpenAI Agents SDK tools.
             max_turns (int): Maximum model turns per execution.
+            name (str | None): Optional name overriding the implementation default.
 
         Returns:
             None: Configuration is stored on the provider-native agent.
         """
-        throw_if( 'name', name )
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
         throw_if_less_than( 'max_turns', max_turns, 1 )
+        agent_name = name or self.minion_name
+        throw_if( 'name', agent_name )
         super( ).__init__(
-            name=name,
+            name=agent_name,
             model=model,
             instructions=instructions,
             tools=list( tools or [ ] ),
@@ -91,22 +95,45 @@ class Minion( Agent ):
 class DataMinion( Minion ):
     """OpenAI Minion specialized for data workflows."""
 
-
-    def __init__( self, model: str, instructions: str, tools: Sequence[ Tool ] | None=None,
-            max_turns: int=10, name: str='Data Minion' ) -> None:
-        """Initialize an OpenAI data Minion.
-
-        Args:
-            model (str): OpenAI model identifier.
-            instructions (str): Data-workflow instructions.
-            tools (Sequence[Tool] | None): Optional OpenAI Agents SDK tools.
-            max_turns (int): Maximum model turns per execution.
-            name (str): Human-readable agent name.
-
-        Returns:
-            None: Configuration is stored on the provider-native agent.
-        """
-        super( ).__init__( name, model, instructions, tools, max_turns )
+    minion_name: ClassVar[ str ] = 'Data Minion'
 
 
-__all__: list[ str ] = [ 'DataMinion', 'Minion' ]
+class ResearchMinion( Minion ):
+    """OpenAI Minion specialized for research workflows."""
+
+    minion_name: ClassVar[ str ] = 'Research Minion'
+
+
+class CodingMinion( Minion ):
+    """OpenAI Minion specialized for software workflows."""
+
+    minion_name: ClassVar[ str ] = 'Coding Minion'
+
+
+class WritingMinion( Minion ):
+    """OpenAI Minion specialized for writing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Writing Minion'
+
+
+class PlanningMinion( Minion ):
+    """OpenAI Minion specialized for planning workflows."""
+
+    minion_name: ClassVar[ str ] = 'Planning Minion'
+
+
+class ReviewMinion( Minion ):
+    """OpenAI Minion specialized for review workflows."""
+
+    minion_name: ClassVar[ str ] = 'Review Minion'
+
+
+__all__: list[ str ] = [
+    'CodingMinion',
+    'DataMinion',
+    'Minion',
+    'PlanningMinion',
+    'ResearchMinion',
+    'ReviewMinion',
+    'WritingMinion',
+]
