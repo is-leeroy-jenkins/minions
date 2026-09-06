@@ -1,9 +1,10 @@
-# Architecture
+
+
+![Minions architecture](img/minions-architecture.png)
+___
 
 Minions is deliberately provider-oriented. A workflow selects exactly one provider module and
 uses models, tools, messages, and results from that same provider.
-
-![Minions architecture](img/minions-architecture.png){ .minions-diagram }
 
 ## Package boundary
 

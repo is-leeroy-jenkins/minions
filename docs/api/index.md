@@ -1,4 +1,6 @@
-# API Reference
+![](../img/minions-workflow.png)
+
+___
 
 The API reference is generated from the package's current type annotations and docstrings.
 
