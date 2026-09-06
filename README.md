@@ -63,8 +63,7 @@ Set only the key required by the selected provider.
 | Claude   | `ANTHROPIC_API_KEY`  |
 | Mistral  | `MISTRAL_API_KEY`    |
 
-Grok, Claude, and Mistral also accept an explicit `api_key` constructor argument. OpenAI and
-Gemini use their native SDK configuration.
+
 
 ![](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/images/minions-architecture.png)
 
