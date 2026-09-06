@@ -1,0 +1,86 @@
+site_name: Minions
+site_description: Provider-native AI agents organized as reusable workflow-specific Minions.
+site_author: Terry D. Eppler
+site_url: https://is-leeroy-jenkins.github.io/minions/
+repo_name: is-leeroy-jenkins/minions
+repo_url: https://github.com/is-leeroy-jenkins/minions
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  logo: img/minions-project.png
+  favicon: img/minions-project.png
+  palette:
+    scheme: slate
+    primary: black
+    accent: blue
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ . ]
+          options:
+            docstring_style: google
+            heading_level: 2
+            members_order: source
+            merge_init_into_class: true
+            show_if_no_docstring: false
+            show_root_heading: true
+            show_root_full_path: false
+            show_signature_annotations: true
+            show_source: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - User Guide:
+      - Overview: user-guide/index.md
+      - Getting Started: user-guide/getting-started.md
+      - Provider Tools: user-guide/provider-tools.md
+      - Execution and Streaming: user-guide/execution.md
+      - Custom Minions: user-guide/custom-minions.md
+  - Architecture: architecture.md
+  - API Reference:
+      - Overview: api/index.md
+      - OpenAI: api/gpt.md
+      - Gemini: api/gemini.md
+      - Grok: api/grok.md
+      - Claude: api/claude.md
+      - Mistral: api/mistral.md
+      - Models and Validation: api/config.md
+  - Development: development.md
+
+extra_css:
+  - assets/css/minions.css
+
+extra_javascript:
+  - assets/js/minions.js
+
+copyright: Copyright &copy; 2026 Terry D. Eppler
