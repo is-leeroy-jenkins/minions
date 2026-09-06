@@ -9,7 +9,7 @@
   <a href="#installation">Installation</a> ·
   <a href="#concrete-minions">Minions</a> ·
   <a href="#native-provider-tools">Native Tools</a> ·
-  <a href="[user-guide.md](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/user-guide.md)">User Guide</a> ·
+  <a href="https://github.com/is-leeroy-jenkins/minions/blob/main/resources/user-guide.md">User Guide</a> ·
   <a href="#development">Development</a>
 </p>
 
