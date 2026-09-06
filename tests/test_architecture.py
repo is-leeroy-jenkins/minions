@@ -1,4 +1,44 @@
-'''Architecture and validation tests for every provider pathway.'''
+'''
+    ******************************************************************************************
+      Assembly:                minions
+      Filename:                test_architecture.py
+      Author:                  Terry D. Eppler
+      Created:                 09-05-2026
+
+      Last Modified By:        Terry D. Eppler
+      Last Modified On:        09-06-2026
+    ******************************************************************************************
+    <copyright file="test_architecture.py" company="Terry D. Eppler">
+
+         test_architecture.py
+         Copyright © 2026 Terry D. Eppler
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the “Software”),
+     to deal in the Software without restriction,
+     including without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software,
+     and to permit persons to whom the Software is furnished to do so,
+     subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in all
+     copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+     PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+     CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+     You can contact me at: terryeppler@gmail.com or eppler.terry@epa.gov
+
+    </copyright>
+    <summary>
+        Architecture and validation tests for every provider pathway.
+    </summary>
+    ******************************************************************************************
+'''
 from __future__ import annotations
 
 from importlib import import_module
@@ -25,6 +65,7 @@ CONCRETE_MINIONS: dict[ str, str ] = {
     'CodingMinion': 'Coding Minion',
     'ComplianceMinion': 'Compliance Minion',
     'DataMinion': 'Data Minion',
+    'GovernanceMinion': 'Governance Minion',
     'ImageAnalysisMinion': 'Image Analysis Minion',
     'ImageEditingMinion': 'Image Editing Minion',
     'ImageGenerationMinion': 'Image Generation Minion',
@@ -44,6 +85,7 @@ GURO_CATEGORY_TEMPLATES: dict[ str, str ] = {
     'Software Engineering': 'CodingMinion',
     'Software Engineer': 'CodingMinion',
     'Data Analytics & Governance': 'DataMinion',
+    'Data Governance': 'GovernanceMinion',
     'Instruction/ Training / Planning': 'PlanningMinion',
     'Image Generation': 'ImageGenerationMinion',
     'Image Analysis': 'ImageAnalysisMinion',
@@ -130,6 +172,7 @@ def test_root_does_not_export_a_cross_provider_minion( ) -> None:
     import minions
 
     assert not hasattr( minions, 'Minion' )
+    assert not hasattr( minions, 'throw_if_less_than' )
 
 
 @pytest.mark.parametrize( 'provider', [ 'gpt', 'gemini', 'grok', 'claude', 'mistral' ] )
@@ -140,7 +183,10 @@ def test_every_provider_exports_the_complete_concrete_minion_family(
     for class_name, default_name in CONCRETE_MINIONS.items( ):
         implementation = getattr( module, class_name )
         assert issubclass( implementation, module.Minion )
-        assert implementation.minion_name == default_name
+        if provider == 'gemini':
+            assert implementation.model_fields[ 'minion_name' ].default == default_name
+        else:
+            assert implementation.minion_name == default_name
 
 
 @pytest.mark.parametrize( 'provider', [ 'gpt', 'gemini', 'grok', 'claude', 'mistral' ] )
@@ -148,6 +194,32 @@ def test_provider_modules_do_not_expose_factory_functions( provider: str ) -> No
     '''Verify concrete classes are the only construction mechanism.'''
     module = import_module( f'minions.{provider}' )
     assert not hasattr( module, 'create_minion' )
+
+
+@pytest.mark.parametrize( 'provider', [ 'gpt', 'gemini', 'grok', 'claude', 'mistral' ] )
+def test_minion_names_use_plain_string_annotations( provider: str ) -> None:
+    '''Verify names use ordinary string annotations on every Minion class.'''
+    module = import_module( f'minions.{provider}' )
+    implementations = [ module.Minion ] + [
+        getattr( module, class_name ) for class_name in CONCRETE_MINIONS
+    ]
+    for implementation in implementations:
+        assert implementation.__annotations__[ 'minion_name' ] == 'str'
+
+
+@pytest.mark.parametrize( 'provider', [ 'gpt', 'gemini', 'grok', 'claude', 'mistral' ] )
+def test_provider_minions_reject_invalid_turn_limits( provider: str ) -> None:
+    '''Verify each constructor applies its own direct turn-limit validation.'''
+    module = import_module( f'minions.{provider}' )
+    arguments: dict[ str, object ] = {
+        'model': f'{provider}-test',
+        'instructions': 'Do the work.',
+        'max_turns': 0,
+    }
+    if provider in ( 'grok', 'claude', 'mistral' ):
+        arguments[ 'api_key' ] = 'test-key'
+    with pytest.raises( ValueError, match='max_turns' ):
+        module.Minion( **arguments )
 
 
 @pytest.mark.parametrize( 'provider', [ 'gpt', 'gemini' ] )
@@ -158,7 +230,7 @@ def test_native_concrete_minions_are_constructible( provider: str ) -> None:
         implementation = getattr( module, class_name )
         minion = implementation( model=f'{provider}-test', instructions='Do the work.' )
         actual_name = getattr( minion, 'display_name', minion.name )
-        assert actual_name == implementation.minion_name
+        assert actual_name == CONCRETE_MINIONS[ class_name ]
 
 
 @pytest.mark.parametrize( 'provider', [ 'grok', 'claude', 'mistral' ] )
@@ -182,7 +254,7 @@ def test_wrapped_concrete_minions_are_constructible( provider: str ) -> None:
             minion = implementation(
                 model=f'{provider}-test', instructions='Do the work.', api_key='test-key'
             )
-            assert minion.name == implementation.minion_name
+            assert minion.name == CONCRETE_MINIONS[ class_name ]
     finally:
         for provider_patch in reversed( patches[ provider ] ):
             provider_patch.stop( )

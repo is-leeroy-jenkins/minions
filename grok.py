@@ -1,9 +1,49 @@
-'''xAI Grok Minion implementations.'''
+'''
+    ******************************************************************************************
+      Assembly:                minions
+      Filename:                grok.py
+      Author:                  Terry D. Eppler
+      Created:                 09-05-2026
+
+      Last Modified By:        Terry D. Eppler
+      Last Modified On:        09-06-2026
+    ******************************************************************************************
+    <copyright file="grok.py" company="Terry D. Eppler">
+
+         grok.py
+         Copyright © 2026 Terry D. Eppler
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the “Software”),
+     to deal in the Software without restriction,
+     including without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software,
+     and to permit persons to whom the Software is furnished to do so,
+     subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in all
+     copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+     PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+     CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+     You can contact me at: terryeppler@gmail.com or eppler.terry@epa.gov
+
+    </copyright>
+    <summary>
+        xAI Grok Minion implementations.
+    </summary>
+    ******************************************************************************************
+'''
 from __future__ import annotations
 
 from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
 from inspect import isawaitable, iscoroutinefunction
-from typing import ClassVar, overload
+from typing import overload
 import asyncio
 import json
 import os
@@ -14,7 +54,7 @@ from xai_sdk.chat import Chunk, Response, system, tool_result, user
 from xai_sdk.proto import chat_pb2
 from xai_sdk.sync.chat import Chat as SyncChat
 
-from . import throw_if, throw_if_less_than
+from . import throw_if
 
 
 ToolFunction = Callable[ ..., object | Awaitable[ object ] ]
@@ -23,7 +63,7 @@ ToolFunction = Callable[ ..., object | Awaitable[ object ] ]
 class Minion:
     """Grok workflow agent backed by xAI client-side tool calling."""
 
-    minion_name: ClassVar[ str ] = 'Grok Minion'
+    minion_name: str = 'Grok Minion'
 
     def __init__( self, model: str, instructions: str,
             tools: Sequence[ chat_pb2.Tool ] | None=None,
@@ -45,7 +85,8 @@ class Minion:
         """
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
-        throw_if_less_than( 'max_turns', max_turns, 1 )
+        if max_turns < 1:
+            raise ValueError( 'Argument "max_turns" must be at least 1!' )
         self.name = name or self.minion_name
         throw_if( 'name', self.name )
         self.model = model
@@ -262,86 +303,86 @@ class Minion:
 class DataMinion( Minion ):
     """Grok Minion specialized for data workflows."""
 
-    minion_name: ClassVar[ str ] = 'Data Minion'
+    minion_name: str = 'Data Minion'
 
 
 class GovernanceMinion( Minion ):
     """Grok Minion specialized for governance workflows."""
 
-    minion_name: ClassVar[ str ] = 'Governance Minion'
+    minion_name: str = 'Governance Minion'
 
 
 
 class ResearchMinion( Minion ):
     """Grok Minion specialized for research workflows."""
 
-    minion_name: ClassVar[ str ] = 'Research Minion'
+    minion_name: str = 'Research Minion'
 
 
 class CodingMinion( Minion ):
     """Grok Minion specialized for software workflows."""
 
-    minion_name: ClassVar[ str ] = 'Coding Minion'
+    minion_name: str = 'Coding Minion'
 
 
 class WritingMinion( Minion ):
     """Grok Minion specialized for writing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Writing Minion'
+    minion_name: str = 'Writing Minion'
 
 
 class PlanningMinion( Minion ):
     """Grok Minion specialized for planning workflows."""
 
-    minion_name: ClassVar[ str ] = 'Planning Minion'
+    minion_name: str = 'Planning Minion'
 
 
 class ComplianceMinion( Minion ):
     """Grok Minion specialized for compliance, legal, and budget workflows."""
 
-    minion_name: ClassVar[ str ] = 'Compliance Minion'
+    minion_name: str = 'Compliance Minion'
 
 
 class BusinessMinion( Minion ):
     """Grok Minion specialized for business, finance, and marketing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Business Minion'
+    minion_name: str = 'Business Minion'
 
 
 class ImageGenerationMinion( Minion ):
     """Grok Minion specialized for image-generation workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Generation Minion'
+    minion_name: str = 'Image Generation Minion'
 
 
 class ImageAnalysisMinion( Minion ):
     """Grok Minion specialized for image-analysis workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Analysis Minion'
+    minion_name: str = 'Image Analysis Minion'
 
 
 class ImageEditingMinion( Minion ):
     """Grok Minion specialized for image-editing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Editing Minion'
+    minion_name: str = 'Image Editing Minion'
 
 
 class TranslationMinion( Minion ):
     """Grok Minion specialized for translation workflows."""
 
-    minion_name: ClassVar[ str ] = 'Translation Minion'
+    minion_name: str = 'Translation Minion'
 
 
 class TranscriptionMinion( Minion ):
     """Grok Minion specialized for transcription workflows."""
 
-    minion_name: ClassVar[ str ] = 'Transcription Minion'
+    minion_name: str = 'Transcription Minion'
 
 
 class SpeechMinion( Minion ):
     """Grok Minion specialized for speech workflows."""
 
-    minion_name: ClassVar[ str ] = 'Speech Minion'
+    minion_name: str = 'Speech Minion'
 
 __all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
         'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
