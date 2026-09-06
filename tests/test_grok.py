@@ -48,7 +48,13 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 from xai_sdk.chat import tool
 
-from minions.grok import DataMinion
+from minions.grok import (
+    DataMinion,
+    code_execution,
+    collections_search,
+    image_generation,
+    web_search,
+)
 
 
 def sample_tool( value: str ) -> dict[ str, str ]:
@@ -77,6 +83,26 @@ async def emit( *events: tuple[ object, object ] ) -> AsyncIterator[ tuple[ obje
     '''Yield provider stream pairs.'''
     for event in events:
         yield event
+
+
+@patch( 'minions.grok.AsyncClient' )
+@patch( 'minions.grok.Client' )
+def test_grok_hosted_tools_do_not_require_local_functions( client_type: Mock,
+        async_client_type: Mock ) -> None:
+    '''Verify every supported xAI-hosted tool bypasses local function validation.'''
+    tools = [
+        web_search( ),
+        code_execution( ),
+        collections_search( collection_ids=[ 'collection-id' ] ),
+        image_generation( ),
+    ]
+    minion = DataMinion(
+        model='grok-test', instructions='Analyze data.', tools=tools,
+        api_key='test-key'
+    )
+
+    assert minion.tools == tools
+    assert minion.functions == { }
 
 
 @patch( 'minions.grok.AsyncClient' )

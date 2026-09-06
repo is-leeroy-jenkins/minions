@@ -53,6 +53,7 @@ from xai_sdk.aio.chat import Chat as AsyncChat
 from xai_sdk.chat import Chunk, Response, system, tool_result, user
 from xai_sdk.proto import chat_pb2
 from xai_sdk.sync.chat import Chat as SyncChat
+from xai_sdk.tools import code_execution, collections_search, image_generation, web_search
 
 from . import throw_if
 
@@ -106,12 +107,13 @@ class Minion:
 
 
     def validate_tools( self ) -> None:
-        """Validate exact schema-to-callable pairing when tools are supplied.
+        """Validate local schema-to-callable pairing.
 
         Returns:
-            None: Valid pairs are retained on the Minion.
+            None: Local function pairs are validated and hosted tools are retained.
         """
-        names = [ tool.function.name for tool in self.tools ]
+        names = [ tool.function.name for tool in self.tools
+            if tool.HasField( 'function' ) ]
         if len( names ) != len( set( names ) ):
             raise ValueError( 'Argument "tools" must contain unique function names!' )
         missing = sorted( set( names ).difference( self.functions ) )
@@ -387,4 +389,5 @@ class SpeechMinion( Minion ):
 __all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
         'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
         'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'ToolFunction',
-        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]
+        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', 'code_execution',
+        'collections_search', 'image_generation', 'web_search', ]

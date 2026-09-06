@@ -126,7 +126,8 @@ result = minion.run( 'Research the requested topic.' )
 
 ### Grok
 
-Grok requires matching provider schemas and local callables when tools are enabled.
+Grok requires matching provider schemas and local callables only for client-executed function
+tools. xAI-hosted tools do not require entries in `functions`.
 
 ```python
 from fonky.grok import tools
@@ -250,11 +251,132 @@ final provider response.
 |---|---|
 | OpenAI | OpenAI Agents SDK `Tool` objects |
 | Gemini | Callable, `BaseTool`, or `BaseToolset` |
-| Grok | `chat_pb2.Tool` schemas plus identically named local callables |
-| Claude | Anthropic `BetaFunctionTool` objects |
+| Grok | xAI `chat_pb2.Tool`; local function schemas require identically named callables |
+| Claude | `ClaudeTool`: Anthropic `BetaFunctionTool` or `BetaToolUnionParam` |
 | Mistral | `CreateAgentRequestTool` schemas; local function tools require identically named callables |
 
 Grok and Mistral reject duplicate, missing, or extra local function names before execution.
+Provider-hosted tools execute on the provider and therefore do not require local callables.
+
+## Native Provider Tools
+
+| Provider | Native tools exported by the provider module |
+|---|---|
+| OpenAI | `WebSearchTool`, `FileSearchTool`, `CodeInterpreterTool`, `ImageGenerationTool` |
+| Gemini | `google_search`, `url_context`, `VertexAiSearchTool` |
+| Grok | `web_search`, `code_execution`, `collections_search`, `image_generation` |
+| Claude | Web search, web fetch, and code execution through `BetaToolUnionParam` definitions |
+| Mistral | `WebSearchTool`, `CodeInterpreterTool`, `ImageGenerationTool`, `DocumentLibraryTool` |
+
+Native tools remain optional and provider-specific. Do not pass a native tool from one provider to
+another provider's Minion.
+
+### OpenAI native tools
+
+```python
+from minions.gpt import FileSearchTool, ResearchMinion, WebSearchTool
+
+
+minion = ResearchMinion(
+    model='gpt-5.6-sol',
+    instructions='Research the question using current and indexed sources.',
+    tools=[
+        WebSearchTool( ),
+        FileSearchTool( vector_store_ids=[ 'vs_...' ] ),
+    ],
+)
+```
+
+`CodeInterpreterTool` and `ImageGenerationTool` accept their native OpenAI tool configuration
+objects. Minions passes those configurations to the OpenAI Agents SDK unchanged.
+
+### Gemini native tools
+
+```python
+from minions.gemini import ResearchMinion, VertexAiSearchTool
+
+
+minion = ResearchMinion(
+    model='gemini-2.5-flash',
+    instructions='Research the configured enterprise data store.',
+    tools=[
+        VertexAiSearchTool(
+            data_store_id=(
+                'projects/project/locations/global/collections/default_collection/'
+                'dataStores/store'
+            ),
+        ),
+    ],
+)
+```
+
+`google_search` and `url_context` are native ADK tool objects and can be imported directly from
+`minions.gemini`. Supported tool combinations depend on the selected Gemini model and ADK rules.
+
+### Grok native tools
+
+```python
+from minions.grok import DataMinion, code_execution, collections_search, web_search
+
+
+minion = DataMinion(
+    model='grok-4.5',
+    instructions='Research and analyze the requested subject.',
+    tools=[
+        web_search( ),
+        code_execution( ),
+        collections_search( collection_ids=[ 'collection-id' ] ),
+    ],
+)
+```
+
+The `image_generation` constructor is also exported from `minions.grok`. xAI executes these tools
+on its servers; `functions` remains reserved for client-executed function schemas.
+
+### Claude native tools
+
+```python
+from minions.claude import ResearchMinion
+
+
+minion = ResearchMinion(
+    model='claude-sonnet-4-6',
+    instructions='Research and analyze the requested subject.',
+    tools=[
+        { 'type': 'web_search_20260318', 'name': 'web_search' },
+        { 'type': 'web_fetch_20260318', 'name': 'web_fetch' },
+        { 'type': 'code_execution_20260521', 'name': 'code_execution' },
+    ],
+)
+```
+
+Anthropic executes these server tools. Local tools decorated with `anthropic.beta_tool` can appear
+in the same `tools` sequence and are executed by Anthropic's native tool runner.
+
+### Mistral native tools
+
+```python
+from minions.mistral import (
+    CodeInterpreterTool,
+    DataMinion,
+    DocumentLibraryTool,
+    WebSearchTool,
+)
+
+
+minion = DataMinion(
+    model='mistral-medium-latest',
+    instructions='Research and analyze the requested subject.',
+    tools=[
+        WebSearchTool( ),
+        CodeInterpreterTool( ),
+        DocumentLibraryTool( library_ids=[ 'library-id' ] ),
+    ],
+)
+```
+
+`ImageGenerationTool` is also exported from `minions.mistral`. Mistral executes native tools;
+`functions` remains reserved for client-executed function schemas.
 
 ## Category Templates
 

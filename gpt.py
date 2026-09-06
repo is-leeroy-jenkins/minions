@@ -42,7 +42,17 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from agents import Agent, RunResult, RunResultStreaming, Runner, Tool
+from agents import (
+    Agent,
+    CodeInterpreterTool,
+    FileSearchTool,
+    ImageGenerationTool,
+    RunResult,
+    RunResultStreaming,
+    Runner,
+    Tool,
+    WebSearchTool,
+)
 
 from . import throw_if
 
@@ -210,7 +220,8 @@ class SpeechMinion( Minion ):
 
     minion_name: str = 'Speech Minion'
 
-__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
-        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
-        'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'TranscriptionMinion',
-        'TranslationMinion', 'WritingMinion', ]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodeInterpreterTool', 'CodingMinion',
+        'ComplianceMinion', 'DataMinion', 'FileSearchTool', 'GovernanceMinion',
+        'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
+        'ImageGenerationTool', 'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion',
+        'TranscriptionMinion', 'TranslationMinion', 'WebSearchTool', 'WritingMinion', ]

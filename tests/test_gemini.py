@@ -48,7 +48,12 @@ import pytest
 from google.adk.agents.run_config import StreamingMode
 from google.adk.events import Event
 
-from minions.gemini import DataMinion
+from minions.gemini import (
+    DataMinion,
+    VertexAiSearchTool,
+    google_search,
+    url_context,
+)
 
 
 def emit( event: Event ) -> Iterator[ Event ]:
@@ -59,6 +64,25 @@ def emit( event: Event ) -> Iterator[ Event ]:
 async def emit_async( event: Event ) -> AsyncIterator[ Event ]:
     '''Yield one asynchronous ADK event.'''
     yield event
+
+
+@pytest.mark.parametrize( 'native_tool', [
+    google_search,
+    url_context,
+    VertexAiSearchTool(
+        data_store_id=(
+            'projects/project/locations/global/collections/default_collection/'
+            'dataStores/store'
+        )
+    ),
+] )
+def test_gemini_native_tools_are_retained( native_tool: object ) -> None:
+    '''Verify every supported Gemini-native tool reaches the ADK Agent unchanged.'''
+    minion = DataMinion(
+        model='gemini-test', instructions='Analyze data.', tools=[ native_tool ]
+    )
+
+    assert minion.tools == [ native_tool ]
 
 
 @patch( 'minions.gemini.Runner' )
