@@ -1,14 +1,19 @@
-# Minions
+###### minions
 
 <p align="center">
   <img src="resources/images/minions-project.png" alt="Minions" width="900">
 </p>
 
 <p align="center">
-  <a href="https://github.com/is-leeroy-jenkins/minions/actions/workflows/tests.yml"><img src="https://github.com/is-leeroy-jenkins/minions/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
-  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+">
-  <img src="https://img.shields.io/badge/version-0.2.0-6f42c1" alt="Version 0.2.0">
+  <a href="#supported-providers">Providers</a> ·
+  <a href="#installation">Installation</a> ·
+  <a href="#concrete-minions">Concrete Minions</a> ·
+  <a href="#native-provider-tools">Native Tools</a> ·
+  <a href="user-guide.md">User Guide</a> ·
+  <a href="https://is-leeroy-jenkins.github.io/minions/">Documentation</a> ·
+  <a href="#development">Development</a>
 </p>
+
 
 Provider-native AI agents organized as reusable workflow-specific `Minion` classes.
 
@@ -415,6 +420,14 @@ python -m pytest
 python -m build
 ```
 
+Documentation:
+
+```powershell
+python -m pip install -r requirements-docs.txt
+python -m mkdocs build --strict
+python -m mkdocs serve
+```
+
 Tests mock provider network boundaries and validate provider inheritance, optional tools, concrete
 class exports, synchronous execution, asynchronous execution, streaming, and local tool loops.
 
@@ -431,3 +444,8 @@ minions/
 ├── mistral.py
 └── tests/
 ```
+<p align="center">
+  <a href="https://github.com/is-leeroy-jenkins/minions/actions/workflows/tests.yml"><img src="https://github.com/is-leeroy-jenkins/minions/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/version-0.2.0-6f42c1" alt="Version 0.2.0">
+</p>
