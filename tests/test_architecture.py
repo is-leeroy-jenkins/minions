@@ -20,10 +20,52 @@ from minions.mistral import DataMinion as MistralDataMinion
 from minions.mistral import Minion as MistralMinion
 
 
+CONCRETE_MINIONS: dict[ str, str ] = {
+    'BusinessMinion': 'Business Minion',
+    'CodingMinion': 'Coding Minion',
+    'ComplianceMinion': 'Compliance Minion',
+    'DataMinion': 'Data Minion',
+    'ImageAnalysisMinion': 'Image Analysis Minion',
+    'ImageEditingMinion': 'Image Editing Minion',
+    'ImageGenerationMinion': 'Image Generation Minion',
+    'PlanningMinion': 'Planning Minion',
+    'ResearchMinion': 'Research Minion',
+    'SpeechMinion': 'Speech Minion',
+    'TranscriptionMinion': 'Transcription Minion',
+    'TranslationMinion': 'Translation Minion',
+    'WritingMinion': 'Writing Minion',
+}
+
+GURO_CATEGORY_TEMPLATES: dict[ str, str ] = {
+    'Research / Academic': 'ResearchMinion',
+    'Writing / Administrative': 'WritingMinion',
+    'Compliance / Legal / Budget': 'ComplianceMinion',
+    'Business / Finance / Marketing': 'BusinessMinion',
+    'Software Engineering': 'CodingMinion',
+    'Software Engineer': 'CodingMinion',
+    'Data Analytics & Governance': 'DataMinion',
+    'Instruction/ Training / Planning': 'PlanningMinion',
+    'Image Generation': 'ImageGenerationMinion',
+    'Image Analysis': 'ImageAnalysisMinion',
+    'Image Editing': 'ImageEditingMinion',
+    'Translation API': 'TranslationMinion',
+    'Transcription API': 'TranscriptionMinion',
+    'Speech API': 'SpeechMinion',
+}
+
+
 def test_provider_minions_use_native_inheritance_when_available( ) -> None:
     '''Verify direct inheritance for SDKs that expose a suitable Agent class.'''
     assert issubclass( GptMinion, OpenAIAgent )
     assert issubclass( GeminiMinion, GeminiAgent )
+
+
+def test_concrete_templates_cover_the_selected_guro_categories( ) -> None:
+    '''Verify the template family matches Guro's categories and exclusions.'''
+    assert 'Prompt Engineering' not in GURO_CATEGORY_TEMPLATES
+    assert set( GURO_CATEGORY_TEMPLATES.values( ) ) == set( CONCRETE_MINIONS )
+    assert GURO_CATEGORY_TEMPLATES[ 'Software Engineering' ] == 'CodingMinion'
+    assert GURO_CATEGORY_TEMPLATES[ 'Software Engineer' ] == 'CodingMinion'
 
 
 @pytest.mark.parametrize(
@@ -95,16 +137,7 @@ def test_every_provider_exports_the_complete_concrete_minion_family(
         provider: str ) -> None:
     '''Verify all concrete workflow implementations exist and inherit provider Minion.'''
     module = import_module( f'minions.{provider}' )
-    expected = {
-        'CodingMinion': 'Coding Minion',
-        'DataMinion': 'Data Minion',
-        'PlanningMinion': 'Planning Minion',
-        'ResearchMinion': 'Research Minion',
-        'ReviewMinion': 'Review Minion',
-        'WritingMinion': 'Writing Minion',
-    }
-
-    for class_name, default_name in expected.items( ):
+    for class_name, default_name in CONCRETE_MINIONS.items( ):
         implementation = getattr( module, class_name )
         assert issubclass( implementation, module.Minion )
         assert implementation.minion_name == default_name
@@ -121,16 +154,7 @@ def test_provider_modules_do_not_expose_factory_functions( provider: str ) -> No
 def test_native_concrete_minions_are_constructible( provider: str ) -> None:
     '''Verify every native Agent specialization constructs with its workflow name.'''
     module = import_module( f'minions.{provider}' )
-    names = [
-        'CodingMinion',
-        'DataMinion',
-        'PlanningMinion',
-        'ResearchMinion',
-        'ReviewMinion',
-        'WritingMinion',
-    ]
-
-    for class_name in names:
+    for class_name in CONCRETE_MINIONS:
         implementation = getattr( module, class_name )
         minion = implementation( model=f'{provider}-test', instructions='Do the work.' )
         actual_name = getattr( minion, 'display_name', minion.name )
@@ -141,14 +165,6 @@ def test_native_concrete_minions_are_constructible( provider: str ) -> None:
 def test_wrapped_concrete_minions_are_constructible( provider: str ) -> None:
     '''Verify every wrapped provider specialization constructs with its workflow name.'''
     module = import_module( f'minions.{provider}' )
-    names = [
-        'CodingMinion',
-        'DataMinion',
-        'PlanningMinion',
-        'ResearchMinion',
-        'ReviewMinion',
-        'WritingMinion',
-    ]
     patches = {
         'grok': [ patch( 'minions.grok.Client' ), patch( 'minions.grok.AsyncClient' ) ],
         'claude': [
@@ -161,7 +177,7 @@ def test_wrapped_concrete_minions_are_constructible( provider: str ) -> None:
     for provider_patch in patches[ provider ]:
         provider_patch.start( )
     try:
-        for class_name in names:
+        for class_name in CONCRETE_MINIONS:
             implementation = getattr( module, class_name )
             minion = implementation(
                 model=f'{provider}-test', instructions='Do the work.', api_key='test-key'

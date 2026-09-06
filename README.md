@@ -11,14 +11,26 @@ translates or mixes tools between providers.
 Each flat provider module exports its provider-local `Minion` and the same concrete workflow
 implementations:
 
-| Concrete implementation | Workflow purpose |
+| Guro category | Concrete implementation |
 |---|---|
-| `DataMinion` | Data analysis, transformation, statistics, and visualization |
-| `ResearchMinion` | Source discovery, retrieval, synthesis, and evidence review |
-| `CodingMinion` | Software engineering, debugging, testing, and code review |
-| `WritingMinion` | Drafting, editing, summarization, and documentation |
-| `PlanningMinion` | Project, task, process, and implementation planning |
-| `ReviewMinion` | Evaluation, compliance, quality assurance, and red-team review |
+| Research / Academic | `ResearchMinion` |
+| Writing / Administrative | `WritingMinion` |
+| Compliance / Legal / Budget | `ComplianceMinion` |
+| Business / Finance / Marketing | `BusinessMinion` |
+| Software Engineering; Software Engineer | `CodingMinion` |
+| Data Analytics & Governance | `DataMinion` |
+| Instruction / Training / Planning | `PlanningMinion` |
+| Image Generation | `ImageGenerationMinion` |
+| Image Analysis | `ImageAnalysisMinion` |
+| Image Editing | `ImageEditingMinion` |
+| Translation API | `TranslationMinion` |
+| Transcription API | `TranscriptionMinion` |
+| Speech API | `SpeechMinion` |
+
+The Guro Prompt Engineering category is intentionally excluded. The two software labels share
+`CodingMinion` because they represent the same workflow family. Each class is a reusable template;
+individual prompts within its Guro category plug in through `instructions` without creating one
+class per prompt.
 
 | Provider module | Native design | Complete execution |
 |---|---|---|

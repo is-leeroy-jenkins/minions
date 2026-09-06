@@ -359,20 +359,69 @@ class PlanningMinion( Minion ):
     minion_name: ClassVar[ str ] = 'Planning Minion'
 
 
-class ReviewMinion( Minion ):
-    """Mistral Minion specialized for review workflows."""
+class ComplianceMinion( Minion ):
+    """Mistral Minion specialized for compliance, legal, and budget workflows."""
 
-    minion_name: ClassVar[ str ] = 'Review Minion'
+    minion_name: ClassVar[ str ] = 'Compliance Minion'
+
+
+class BusinessMinion( Minion ):
+    """Mistral Minion specialized for business, finance, and marketing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Business Minion'
+
+
+class ImageGenerationMinion( Minion ):
+    """Mistral Minion specialized for image-generation workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Generation Minion'
+
+
+class ImageAnalysisMinion( Minion ):
+    """Mistral Minion specialized for image-analysis workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Analysis Minion'
+
+
+class ImageEditingMinion( Minion ):
+    """Mistral Minion specialized for image-editing workflows."""
+
+    minion_name: ClassVar[ str ] = 'Image Editing Minion'
+
+
+class TranslationMinion( Minion ):
+    """Mistral Minion specialized for translation workflows."""
+
+    minion_name: ClassVar[ str ] = 'Translation Minion'
+
+
+class TranscriptionMinion( Minion ):
+    """Mistral Minion specialized for transcription workflows."""
+
+    minion_name: ClassVar[ str ] = 'Transcription Minion'
+
+
+class SpeechMinion( Minion ):
+    """Mistral Minion specialized for speech workflows."""
+
+    minion_name: ClassVar[ str ] = 'Speech Minion'
 
 
 __all__: list[ str ] = [
+    'BusinessMinion',
     'CodingMinion',
+    'ComplianceMinion',
     'DataMinion',
+    'ImageAnalysisMinion',
+    'ImageEditingMinion',
+    'ImageGenerationMinion',
     'Minion',
     'MistralTool',
     'PlanningMinion',
     'ResearchMinion',
-    'ReviewMinion',
+    'SpeechMinion',
     'ToolFunction',
+    'TranscriptionMinion',
+    'TranslationMinion',
     'WritingMinion',
 ]
