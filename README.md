@@ -25,13 +25,13 @@ translated or mixed between providers.
 
 ## Supported Providers
 
-| Module | Provider SDK | `Minion` implementation | Execution methods |
-|---|---|---|---|
-| `minions.gpt` | OpenAI Agents SDK | Inherits `agents.Agent` | `run`, `run_async`, `stream` |
-| `minions.gemini` | Google Agent Development Kit | Inherits `google.adk.Agent` | `run`, `run_async`, `stream` |
-| `minions.grok` | xAI SDK | Wraps synchronous and asynchronous chats | `run`, `run_async`, `stream` |
-| `minions.claude` | Anthropic SDK | Wraps native tool runners | `run`, `run_async`, `stream` |
-| `minions.mistral` | Mistral SDK | Wraps a native remote agent | `run`, `run_async`, `stream` |
+| Module            | Provider SDK                 | `Minion` implementation                  | Execution methods            |
+|-------------------|------------------------------|------------------------------------------|------------------------------|
+| `minions.gpt`     | OpenAI Agents SDK            | Inherits `agents.Agent`                  | `run`, `run_async`, `stream` |
+| `minions.gemini`  | Google Agent Development Kit | Inherits `google.adk.Agent`              | `run`, `run_async`, `stream` |
+| `minions.grok`    | xAI SDK                      | Wraps synchronous and asynchronous chats | `run`, `run_async`, `stream` |
+| `minions.claude`  | Anthropic SDK                | Wraps native tool runners                | `run`, `run_async`, `stream` |
+| `minions.mistral` | Mistral SDK                  | Wraps a native remote agent              | `run`, `run_async`, `stream` |
 
 ## Installation
 
@@ -55,12 +55,12 @@ python -m pip install -e .
 Set only the key required by the selected provider.
 
 | Provider | Environment variable |
-|---|---|
-| OpenAI | `OPENAI_API_KEY` |
-| Gemini | `GOOGLE_API_KEY` |
-| Grok | `XAI_API_KEY` |
-| Claude | `ANTHROPIC_API_KEY` |
-| Mistral | `MISTRAL_API_KEY` |
+|----------|----------------------|
+| OpenAI   | `OPENAI_API_KEY`     |
+| Gemini   | `GOOGLE_API_KEY`     |
+| Grok     | `XAI_API_KEY`        |
+| Claude   | `ANTHROPIC_API_KEY`  |
+| Mistral  | `MISTRAL_API_KEY`    |
 
 Grok, Claude, and Mistral also accept an explicit `api_key` constructor argument. OpenAI and
 Gemini use their native SDK configuration.
@@ -73,22 +73,22 @@ ___
 
 The same concrete class family is exported from every provider module.
 
-| Guro workflow category | Minion class |
-|---|---|
-| Research / Academic | `ResearchMinion` |
-| Writing / Administrative | `WritingMinion` |
-| Compliance / Legal / Budget | `ComplianceMinion` |
-| Business / Finance / Marketing | `BusinessMinion` |
-| Software Engineering / Software Engineer | `CodingMinion` |
-| Data Analytics | `DataMinion` |
-| Data Governance | `GovernanceMinion` |
-| Instruction / Training / Planning | `PlanningMinion` |
-| Image Generation | `ImageGenerationMinion` |
-| Image Analysis | `ImageAnalysisMinion` |
-| Image Editing | `ImageEditingMinion` |
-| Translation API | `TranslationMinion` |
-| Transcription API | `TranscriptionMinion` |
-| Speech API | `SpeechMinion` |
+| Guro workflow category                   | Minion class            |
+|------------------------------------------|-------------------------|
+| Research / Academic                      | `ResearchMinion`        |
+| Writing / Administrative                 | `WritingMinion`         |
+| Compliance / Legal / Budget              | `ComplianceMinion`      |
+| Business / Finance / Marketing           | `BusinessMinion`        |
+| Software Engineering / Software Engineer | `CodingMinion`          |
+| Data Analytics                           | `DataMinion`            |
+| Data Governance                          | `GovernanceMinion`      |
+| Instruction / Training / Planning        | `PlanningMinion`        |
+| Image Generation                         | `ImageGenerationMinion` |
+| Image Analysis                           | `ImageAnalysisMinion`   |
+| Image Editing                            | `ImageEditingMinion`    |
+| Translation API                          | `TranslationMinion`     |
+| Transcription API                        | `TranscriptionMinion`   |
+| Speech API                               | `SpeechMinion`          |
 
 
 
