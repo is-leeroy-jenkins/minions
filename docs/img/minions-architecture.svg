@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Minions system architecture</title>
+  <desc id="desc">Guro instructions and Fonky tools compose Minions that execute through isolated OpenAI, Google, xAI, Anthropic, and Mistral pathways.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#11152a"/>
+    </linearGradient>
+    <radialGradient id="core" cx="35%" cy="25%" r="80%">
+      <stop offset="0" stop-color="#244b78"/>
+      <stop offset="1" stop-color="#101a2d"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="13" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#5fb3ff"/>
+    </marker>
+    <style>
+      text { font-family: Inter, Segoe UI, Arial, sans-serif; fill: #f4f7fb; }
+      .eyebrow { font-size: 20px; letter-spacing: 5px; fill: #5fb3ff; }
+      .title { font-size: 52px; font-weight: 700; }
+      .subtitle { font-size: 23px; fill: #a9b6c9; }
+      .metric-value { font-size: 30px; font-weight: 700; }
+      .metric-label { font-size: 18px; fill: #a9b6c9; }
+      .node-title { font-size: 30px; font-weight: 700; }
+      .node-subtitle { font-size: 19px; fill: #a9b6c9; }
+      .module { font-size: 18px; font-family: Consolas, monospace; }
+      .provider-title { font-size: 27px; font-weight: 700; }
+      .provider-copy { font-size: 17px; fill: #b7c2d3; }
+      .principle-title { font-size: 20px; font-weight: 700; }
+      .principle-copy { font-size: 16px; fill: #a9b6c9; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" rx="34" fill="url(#background)"/>
+  <circle cx="800" cy="315" r="250" fill="#173a61" opacity="0.18"/>
+  <circle cx="112" cy="870" r="230" fill="#653c99" opacity="0.08"/>
+
+  <text x="800" y="66" text-anchor="middle" class="eyebrow">PROVIDER-NATIVE AGENT FRAMEWORK</text>
+  <text x="800" y="125" text-anchor="middle" class="title">Minions Architecture</text>
+  <text x="800" y="163" text-anchor="middle" class="subtitle">One reusable workflow model · Five isolated provider pathways</text>
+
+  <g transform="translate(530 188)">
+    <text x="0" y="0" class="metric-value">5</text><text x="35" y="0" class="metric-label">providers</text>
+    <text x="205" y="0" class="metric-value">14</text><text x="255" y="0" class="metric-label">concrete Minions</text>
+    <text x="525" y="0" class="metric-value">3</text><text x="560" y="0" class="metric-label">execution modes</text>
+  </g>
+
+  <g>
+    <rect x="130" y="272" width="300" height="160" rx="28" fill="#121d30" stroke="#34435a" stroke-width="2"/>
+    <circle cx="280" cy="317" r="26" fill="#7f5fb8"/><text x="280" y="326" text-anchor="middle" font-size="24" font-weight="700">G</text>
+    <text x="280" y="372" text-anchor="middle" class="node-title">Guro</text>
+    <text x="280" y="405" text-anchor="middle" class="node-subtitle">Reusable instructions</text>
+
+    <line x1="440" y1="352" x2="610" y2="352" stroke="#5fb3ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <circle cx="800" cy="352" r="142" fill="#3478b8" opacity="0.18" filter="url(#glow)"/>
+    <circle cx="800" cy="352" r="122" fill="url(#core)" stroke="#5fb3ff" stroke-width="3"/>
+    <circle cx="800" cy="307" r="28" fill="#348bd4"/><text x="800" y="316" text-anchor="middle" font-size="24" font-weight="700">M</text>
+    <text x="800" y="363" text-anchor="middle" class="node-title">MINIONS</text>
+    <text x="800" y="394" text-anchor="middle" class="node-subtitle">Concrete workflow agents</text>
+    <text x="800" y="424" text-anchor="middle" class="module">run · run_async · stream</text>
+
+    <line x1="1160" y1="352" x2="990" y2="352" stroke="#5fb3ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <rect x="1170" y="272" width="300" height="160" rx="28" fill="#121d30" stroke="#34435a" stroke-width="2"/>
+    <circle cx="1320" cy="317" r="26" fill="#7f5fb8"/><text x="1320" y="326" text-anchor="middle" font-size="24" font-weight="700">F</text>
+    <text x="1320" y="372" text-anchor="middle" class="node-title">Fonky</text>
+    <text x="1320" y="405" text-anchor="middle" class="node-subtitle">Optional function tools</text>
+  </g>
+
+  <line x1="800" y1="482" x2="800" y2="522" stroke="#7f5fb8" stroke-width="3"/>
+  <text x="800" y="555" text-anchor="middle" class="node-subtitle">A Minion enters exactly one provider pathway</text>
+
+  <g transform="translate(70 586)">
+    <g>
+      <rect width="278" height="236" rx="18" fill="#111c2e" stroke="#3b92d0" stroke-width="2"/>
+      <rect width="278" height="8" rx="4" fill="#3b92d0"/>
+      <circle cx="38" cy="50" r="22" fill="#3b92d0"/><text x="38" y="58" text-anchor="middle" font-size="20" font-weight="700">O</text>
+      <text x="72" y="48" class="module" fill="#5fb3ff">minions.gpt</text>
+      <text x="24" y="98" class="provider-title">OpenAI</text>
+      <text x="24" y="130" class="provider-copy">Minion(Agent)</text><text x="24" y="154" class="provider-copy">Agents SDK inheritance</text>
+      <line x1="24" y1="174" x2="254" y2="174" stroke="#34435a"/>
+      <text x="24" y="202" class="provider-copy">Web · Files · Code · Images</text>
+    </g>
+    <g transform="translate(294)">
+      <rect width="278" height="236" rx="18" fill="#111c2e" stroke="#31b58c" stroke-width="2"/>
+      <rect width="278" height="8" rx="4" fill="#31b58c"/>
+      <circle cx="38" cy="50" r="22" fill="#31b58c"/><text x="38" y="58" text-anchor="middle" font-size="20" font-weight="700">G</text>
+      <text x="72" y="48" class="module" fill="#55d6ad">minions.gemini</text>
+      <text x="24" y="98" class="provider-title">Google</text>
+      <text x="24" y="130" class="provider-copy">Minion(Agent)</text><text x="24" y="154" class="provider-copy">ADK inheritance</text>
+      <line x1="24" y1="174" x2="254" y2="174" stroke="#34435a"/>
+      <text x="24" y="202" class="provider-copy">Search · URL · Vertex AI</text>
+    </g>
+    <g transform="translate(588)">
+      <rect width="278" height="236" rx="18" fill="#111c2e" stroke="#e0a13a" stroke-width="2"/>
+      <rect width="278" height="8" rx="4" fill="#e0a13a"/>
+      <circle cx="38" cy="50" r="22" fill="#e0a13a"/><text x="38" y="58" text-anchor="middle" font-size="20" font-weight="700">x</text>
+      <text x="72" y="48" class="module" fill="#f2bd62">minions.grok</text>
+      <text x="24" y="98" class="provider-title">xAI</text>
+      <text x="24" y="130" class="provider-copy">Minion</text><text x="24" y="154" class="provider-copy">Chat wrapper</text>
+      <line x1="24" y1="174" x2="254" y2="174" stroke="#34435a"/>
+      <text x="24" y="202" class="provider-copy">Web · Code · Collections</text>
+    </g>
+    <g transform="translate(882)">
+      <rect width="278" height="236" rx="18" fill="#111c2e" stroke="#b46bd3" stroke-width="2"/>
+      <rect width="278" height="8" rx="4" fill="#b46bd3"/>
+      <circle cx="38" cy="50" r="22" fill="#b46bd3"/><text x="38" y="58" text-anchor="middle" font-size="20" font-weight="700">A</text>
+      <text x="72" y="48" class="module" fill="#cf91e8">minions.claude</text>
+      <text x="24" y="98" class="provider-title">Anthropic</text>
+      <text x="24" y="130" class="provider-copy">Minion</text><text x="24" y="154" class="provider-copy">Tool-runner wrapper</text>
+      <line x1="24" y1="174" x2="254" y2="174" stroke="#34435a"/>
+      <text x="24" y="202" class="provider-copy">Web Search · Fetch · Code</text>
+    </g>
+    <g transform="translate(1176)">
+      <rect width="278" height="236" rx="18" fill="#111c2e" stroke="#e05e74" stroke-width="2"/>
+      <rect width="278" height="8" rx="4" fill="#e05e74"/>
+      <circle cx="38" cy="50" r="22" fill="#e05e74"/><text x="38" y="58" text-anchor="middle" font-size="20" font-weight="700">M</text>
+      <text x="72" y="48" class="module" fill="#f08092">minions.mistral</text>
+      <text x="24" y="98" class="provider-title">Mistral</text>
+      <text x="24" y="130" class="provider-copy">Minion</text><text x="24" y="154" class="provider-copy">Remote-agent wrapper</text>
+      <line x1="24" y1="174" x2="254" y2="174" stroke="#34435a"/>
+      <text x="24" y="202" class="provider-copy">Web · Code · Images · Docs</text>
+    </g>
+  </g>
+
+  <g transform="translate(150 878)">
+    <circle cx="0" cy="0" r="8" fill="#48c78e"/><text x="20" y="7" class="principle-title">Provider isolation</text><text x="20" y="34" class="principle-copy">No cross-provider mixing</text>
+    <circle cx="500" cy="0" r="8" fill="#48c78e"/><text x="520" y="7" class="principle-title">Optional tooling</text><text x="520" y="34" class="principle-copy">Every Minion can run tool-free</text>
+    <circle cx="1000" cy="0" r="8" fill="#48c78e"/><text x="1020" y="7" class="principle-title">Ordinary inheritance</text><text x="1020" y="34" class="principle-copy">Concrete Minions are templates</text>
+  </g>
+</svg>
