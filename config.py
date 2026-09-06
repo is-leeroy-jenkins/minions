@@ -1,24 +1,23 @@
 '''
-  ******************************************************************************************
+    ******************************************************************************************
       Assembly:                minions
       Filename:                config.py
       Author:                  Terry D. Eppler
-      Created:                 05-31-2022
+      Created:                 09-03-2026
 
       Last Modified By:        Terry D. Eppler
-      Last Modified On:        05-01-2025
-  ******************************************************************************************
-  <copyright file="config.py" company="Terry D. Eppler">
+      Last Modified On:        09-06-2026
+    ******************************************************************************************
+    <copyright file="config.py" company="Terry D. Eppler">
 
-	     config.py
-	     Copyright ©  2022  Terry Eppler
+         config.py
+         Copyright © 2026 Terry D. Eppler
 
      Permission is hereby granted, free of charge, to any person obtaining a copy
      of this software and associated documentation files (the “Software”),
      to deal in the Software without restriction,
-     including without limitation the rights to use,
-     copy, modify, merge, publish, distribute, sublicense,
-     and/or sell copies of the Software,
+     including without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software,
      and to permit persons to whom the Software is furnished to do so,
      subject to the following conditions:
 
@@ -26,20 +25,19 @@
      copies or substantial portions of the Software.
 
      THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-     FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
-     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-     DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-     ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-     DEALINGS IN THE SOFTWARE.
+     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+     PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+     CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-     You can contact me at:  terryeppler@gmail.com or eppler.terry@epa.gov
+     You can contact me at: terryeppler@gmail.com or eppler.terry@epa.gov
 
-  </copyright>
-  <summary>
-    config.py
-  </summary>
-  ******************************************************************************************
+    </copyright>
+    <summary>
+        Environment and model configuration for Minions.
+    </summary>
+    ******************************************************************************************
 '''
 
 import os

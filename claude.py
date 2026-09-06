@@ -1,8 +1,47 @@
-'''Anthropic Claude Minion implementations.'''
+'''
+    ******************************************************************************************
+      Assembly:                minions
+      Filename:                claude.py
+      Author:                  Terry D. Eppler
+      Created:                 09-05-2026
+
+      Last Modified By:        Terry D. Eppler
+      Last Modified On:        09-06-2026
+    ******************************************************************************************
+    <copyright file="claude.py" company="Terry D. Eppler">
+
+         claude.py
+         Copyright © 2026 Terry D. Eppler
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the “Software”),
+     to deal in the Software without restriction,
+     including without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software,
+     and to permit persons to whom the Software is furnished to do so,
+     subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in all
+     copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+     PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+     CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+     You can contact me at: terryeppler@gmail.com or eppler.terry@epa.gov
+
+    </copyright>
+    <summary>
+        Anthropic Claude Minion implementations.
+    </summary>
+    ******************************************************************************************
+'''
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import ClassVar
 import asyncio
 import os
 
@@ -14,13 +53,13 @@ from anthropic.lib.tools import (
 )
 from anthropic.types.beta import BetaMessage
 
-from . import throw_if, throw_if_less_than
+from . import throw_if
 
 
 class Minion:
     """Claude workflow agent backed by Anthropic's native tool runner."""
 
-    minion_name: ClassVar[ str ] = 'Claude Minion'
+    minion_name: str = 'Claude Minion'
 
     def __init__( self, model: str, instructions: str,
             tools: Sequence[ BetaFunctionTool ] | None=None, max_turns: int=10,
@@ -42,8 +81,10 @@ class Minion:
         """
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
-        throw_if_less_than( 'max_turns', max_turns, 1 )
-        throw_if_less_than( 'max_tokens', max_tokens, 1 )
+        if max_turns < 1:
+            raise ValueError( 'Argument "max_turns" must be at least 1!' )
+        if max_tokens < 1:
+            raise ValueError( 'Argument "max_tokens" must be at least 1!' )
         self.name = name or self.minion_name
         throw_if( 'name', self.name )
         self.model = model
@@ -146,85 +187,85 @@ class Minion:
 class DataMinion( Minion ):
     """Claude Minion specialized for data workflows."""
 
-    minion_name: ClassVar[ str ] = 'Data Minion'
+    minion_name: str = 'Data Minion'
 
 
 class GovernanceMinion( Minion ):
     """Claude Minion specialized for governance workflows."""
 
-    minion_name: ClassVar[ str ] = 'Governance Minion'
+    minion_name: str = 'Governance Minion'
 
 
 class ResearchMinion( Minion ):
     """Claude Minion specialized for research workflows."""
 
-    minion_name: ClassVar[ str ] = 'Research Minion'
+    minion_name: str = 'Research Minion'
 
 
 class CodingMinion( Minion ):
     """Claude Minion specialized for software workflows."""
 
-    minion_name: ClassVar[ str ] = 'Coding Minion'
+    minion_name: str = 'Coding Minion'
 
 
 class WritingMinion( Minion ):
     """Claude Minion specialized for writing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Writing Minion'
+    minion_name: str = 'Writing Minion'
 
 
 class PlanningMinion( Minion ):
     """Claude Minion specialized for planning workflows."""
 
-    minion_name: ClassVar[ str ] = 'Planning Minion'
+    minion_name: str = 'Planning Minion'
 
 
 class ComplianceMinion( Minion ):
     """Claude Minion specialized for compliance, legal, and budget workflows."""
 
-    minion_name: ClassVar[ str ] = 'Compliance Minion'
+    minion_name: str = 'Compliance Minion'
 
 
 class BusinessMinion( Minion ):
     """Claude Minion specialized for business, finance, and marketing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Business Minion'
+    minion_name: str = 'Business Minion'
 
 
 class ImageGenerationMinion( Minion ):
     """Claude Minion specialized for image-generation workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Generation Minion'
+    minion_name: str = 'Image Generation Minion'
 
 
 class ImageAnalysisMinion( Minion ):
     """Claude Minion specialized for image-analysis workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Analysis Minion'
+    minion_name: str = 'Image Analysis Minion'
 
 
 class ImageEditingMinion( Minion ):
     """Claude Minion specialized for image-editing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Editing Minion'
+    minion_name: str = 'Image Editing Minion'
 
 
 class TranslationMinion( Minion ):
     """Claude Minion specialized for translation workflows."""
 
-    minion_name: ClassVar[ str ] = 'Translation Minion'
+    minion_name: str = 'Translation Minion'
 
 
 class TranscriptionMinion( Minion ):
     """Claude Minion specialized for transcription workflows."""
 
-    minion_name: ClassVar[ str ] = 'Transcription Minion'
+    minion_name: str = 'Transcription Minion'
 
 
 class SpeechMinion( Minion ):
     """Claude Minion specialized for speech workflows."""
 
-    minion_name: ClassVar[ str ] = 'Speech Minion'
+    minion_name: str = 'Speech Minion'
 
 __all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
         'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',

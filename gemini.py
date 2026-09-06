@@ -1,8 +1,47 @@
-'''Google Agent Development Kit Minion implementations.'''
+'''
+    ******************************************************************************************
+      Assembly:                minions
+      Filename:                gemini.py
+      Author:                  Terry D. Eppler
+      Created:                 09-05-2026
+
+      Last Modified By:        Terry D. Eppler
+      Last Modified On:        09-06-2026
+    ******************************************************************************************
+    <copyright file="gemini.py" company="Terry D. Eppler">
+
+         gemini.py
+         Copyright © 2026 Terry D. Eppler
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the “Software”),
+     to deal in the Software without restriction,
+     including without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software,
+     and to permit persons to whom the Software is furnished to do so,
+     subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in all
+     copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+     PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+     CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+     You can contact me at: terryeppler@gmail.com or eppler.terry@epa.gov
+
+    </copyright>
+    <summary>
+        Google Agent Development Kit Minion implementations.
+    </summary>
+    ******************************************************************************************
+'''
 from __future__ import annotations
 
 from collections.abc import AsyncIterator, Callable, Sequence
-from typing import ClassVar
 from uuid import uuid4
 import re
 
@@ -16,7 +55,7 @@ from google.adk.tools.base_toolset import BaseToolset
 from google.genai import types
 from pydantic import Field
 
-from . import throw_if, throw_if_less_than
+from . import throw_if
 
 
 GeminiTool = Callable[ ..., object ] | BaseTool | BaseToolset
@@ -25,7 +64,7 @@ GeminiTool = Callable[ ..., object ] | BaseTool | BaseToolset
 class Minion( Agent ):
     """Provider-native Gemini workflow agent."""
 
-    minion_name: ClassVar[ str ] = 'Gemini Minion'
+    minion_name: str = 'Gemini Minion'
     display_name: str
     max_turns: int = 10
     prompt: str = ''
@@ -50,8 +89,10 @@ class Minion( Agent ):
         """
         throw_if( 'model', model )
         throw_if( 'instructions', instructions )
-        throw_if_less_than( 'max_turns', max_turns, 1 )
-        display_name = name or self.minion_name
+        if max_turns < 1:
+            raise ValueError( 'Argument "max_turns" must be at least 1!' )
+        default_name = type( self ).model_fields[ 'minion_name' ].default
+        display_name = name or str( default_name )
         throw_if( 'name', display_name )
         provider_name = self.normalize_name( display_name )
         super( ).__init__( name=provider_name, display_name=display_name, model=model,
@@ -181,85 +222,85 @@ class Minion( Agent ):
 class DataMinion( Minion ):
     """Gemini Minion specialized for data workflows."""
 
-    minion_name: ClassVar[ str ] = 'Data Minion'
+    minion_name: str = 'Data Minion'
 
 
 class GovernanceMinion( Minion ):
     """Gemini Minion specialized for governance workflows."""
 
-    minion_name: ClassVar[ str ] = 'Governance Minion'
+    minion_name: str = 'Governance Minion'
 
 
 class ResearchMinion( Minion ):
     """Gemini Minion specialized for research workflows."""
 
-    minion_name: ClassVar[ str ] = 'Research Minion'
+    minion_name: str = 'Research Minion'
 
 
 class CodingMinion( Minion ):
     """Gemini Minion specialized for software workflows."""
 
-    minion_name: ClassVar[ str ] = 'Coding Minion'
+    minion_name: str = 'Coding Minion'
 
 
 class WritingMinion( Minion ):
     """Gemini Minion specialized for writing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Writing Minion'
+    minion_name: str = 'Writing Minion'
 
 
 class PlanningMinion( Minion ):
     """Gemini Minion specialized for planning workflows."""
 
-    minion_name: ClassVar[ str ] = 'Planning Minion'
+    minion_name: str = 'Planning Minion'
 
 
 class ComplianceMinion( Minion ):
     """Gemini Minion specialized for compliance, legal, and budget workflows."""
 
-    minion_name: ClassVar[ str ] = 'Compliance Minion'
+    minion_name: str = 'Compliance Minion'
 
 
 class BusinessMinion( Minion ):
     """Gemini Minion specialized for business, finance, and marketing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Business Minion'
+    minion_name: str = 'Business Minion'
 
 
 class ImageGenerationMinion( Minion ):
     """Gemini Minion specialized for image-generation workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Generation Minion'
+    minion_name: str = 'Image Generation Minion'
 
 
 class ImageAnalysisMinion( Minion ):
     """Gemini Minion specialized for image-analysis workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Analysis Minion'
+    minion_name: str = 'Image Analysis Minion'
 
 
 class ImageEditingMinion( Minion ):
     """Gemini Minion specialized for image-editing workflows."""
 
-    minion_name: ClassVar[ str ] = 'Image Editing Minion'
+    minion_name: str = 'Image Editing Minion'
 
 
 class TranslationMinion( Minion ):
     """Gemini Minion specialized for translation workflows."""
 
-    minion_name: ClassVar[ str ] = 'Translation Minion'
+    minion_name: str = 'Translation Minion'
 
 
 class TranscriptionMinion( Minion ):
     """Gemini Minion specialized for transcription workflows."""
 
-    minion_name: ClassVar[ str ] = 'Transcription Minion'
+    minion_name: str = 'Transcription Minion'
 
 
 class SpeechMinion( Minion ):
     """Gemini Minion specialized for speech workflows."""
 
-    minion_name: ClassVar[ str ] = 'Speech Minion'
+    minion_name: str = 'Speech Minion'
 
 __all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
         'GovernanceMinion', 'GeminiTool', 'ImageAnalysisMinion', 'ImageEditingMinion',
