@@ -7,23 +7,18 @@
 <p align="center">
   <a href="#supported-providers">Providers</a> ·
   <a href="#installation">Installation</a> ·
-  <a href="#concrete-minions">Concrete Minions</a> ·
+  <a href="#concrete-minions">Minions</a> ·
   <a href="#native-provider-tools">Native Tools</a> ·
-  <a href="user-guide.md">User Guide</a> ·
-  <a href="https://is-leeroy-jenkins.github.io/minions/">Documentation</a> ·
+  <a href="[user-guide.md](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/user-guide.md)">User Guide</a> ·
   <a href="#development">Development</a>
 </p>
 
 
 Provider-native AI agents organized as reusable workflow-specific `Minion` classes.
 
-## Package Role
+![](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/images/minions-workflow.png)
 
-| Package | Responsibility |
-|---|---|
-| [Guro](https://github.com/is-leeroy-jenkins/guro) | Reusable system instructions |
-| [Fonky](https://github.com/is-leeroy-jenkins/fonky) | Provider-compatible AI tools |
-| **Minions** | Provider agents, tool execution, async execution, and streaming |
+___
 
 Minions keeps each workflow inside one provider pathway. Tool schemas and tool functions are never
 translated or mixed between providers.
@@ -70,6 +65,10 @@ Set only the key required by the selected provider.
 Grok, Claude, and Mistral also accept an explicit `api_key` constructor argument. OpenAI and
 Gemini use their native SDK configuration.
 
+![](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/images/minions-architecture.png)
+
+___
+
 ## Concrete Minions
 
 The same concrete class family is exported from every provider module.
@@ -91,9 +90,7 @@ The same concrete class family is exported from every provider module.
 | Transcription API | `TranscriptionMinion` |
 | Speech API | `SpeechMinion` |
 
-Prompt Engineering is intentionally excluded. Concrete classes define the workflow role and
-default display name. The selected model, Guro instruction, and provider tools define the runtime
-behavior.
+
 
 ## Quick Start
 
