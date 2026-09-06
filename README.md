@@ -14,24 +14,24 @@ Provider-native AI agents organized as reusable workflow-specific `Minion` class
 
 ## Package Role
 
-| Package | Responsibility |
-|---|---|
-| [Guro](https://github.com/is-leeroy-jenkins/guro) | Reusable system instructions |
-| [Fonky](https://github.com/is-leeroy-jenkins/fonky) | Provider-compatible AI tools |
-| **Minions** | Provider agents, tool execution, async execution, and streaming |
+| Package                                             | Responsibility                                                  |
+|-----------------------------------------------------|-----------------------------------------------------------------|
+| [Guro](https://github.com/is-leeroy-jenkins/guro)   | Reusable system instructions                                    |
+| [Fonky](https://github.com/is-leeroy-jenkins/fonky) | Provider-compatible AI tools                                    |
+| **Minions**                                         | Provider agents, tool execution, async execution, and streaming |
 
 Minions keeps each workflow inside one provider pathway. Tool schemas and tool functions are never
 translated or mixed between providers.
 
 ## Supported Providers
 
-| Module | Provider SDK | `Minion` implementation | Execution methods |
-|---|---|---|---|
-| `minions.gpt` | OpenAI Agents SDK | Inherits `agents.Agent` | `run`, `run_async`, `stream` |
-| `minions.gemini` | Google Agent Development Kit | Inherits `google.adk.Agent` | `run`, `run_async`, `stream` |
-| `minions.grok` | xAI SDK | Wraps synchronous and asynchronous chats | `run`, `run_async`, `stream` |
-| `minions.claude` | Anthropic SDK | Wraps native tool runners | `run`, `run_async`, `stream` |
-| `minions.mistral` | Mistral SDK | Wraps a native remote agent | `run`, `run_async`, `stream` |
+| Module            | Provider SDK                 | `Minion` implementation                  | Execution methods             |
+|-------------------|------------------------------|------------------------------------------|-------------------------------|
+| `minions.gpt`     | OpenAI Agents SDK            | Inherits `agents.Agent`                  | `run`, `run_async`, `stream`  |
+| `minions.gemini`  | Google Agent Development Kit | Inherits `google.adk.Agent`              | `run`, `run_async`, `stream`  |
+| `minions.grok`    | xAI SDK                      | Wraps synchronous and asynchronous chats | `run`, `run_async`, `stream`  |
+| `minions.claude`  | Anthropic SDK                | Wraps native tool runners                | `run`, `run_async`, `stream`  |
+| `minions.mistral` | Mistral SDK                  | Wraps a native remote agent              | `run`, `run_async`, `stream`  |
 
 ## Installation
 
@@ -55,12 +55,12 @@ python -m pip install -e .
 Set only the key required by the selected provider.
 
 | Provider | Environment variable |
-|---|---|
-| OpenAI | `OPENAI_API_KEY` |
-| Gemini | `GOOGLE_API_KEY` |
-| Grok | `XAI_API_KEY` |
-| Claude | `ANTHROPIC_API_KEY` |
-| Mistral | `MISTRAL_API_KEY` |
+|----------|----------------------|
+| OpenAI   | `OPENAI_API_KEY`     |
+| Gemini   | `GOOGLE_API_KEY`     |
+| Grok     | `XAI_API_KEY`        |
+| Claude   | `ANTHROPIC_API_KEY`  |
+| Mistral  | `MISTRAL_API_KEY`    |
 
 Grok, Claude, and Mistral also accept an explicit `api_key` constructor argument. OpenAI and
 Gemini use their native SDK configuration.
@@ -69,22 +69,22 @@ Gemini use their native SDK configuration.
 
 The same concrete class family is exported from every provider module.
 
-| Guro workflow category | Minion class |
-|---|---|
-| Research / Academic | `ResearchMinion` |
-| Writing / Administrative | `WritingMinion` |
-| Compliance / Legal / Budget | `ComplianceMinion` |
-| Business / Finance / Marketing | `BusinessMinion` |
-| Software Engineering / Software Engineer | `CodingMinion` |
-| Data Analytics | `DataMinion` |
-| Data Governance | `GovernanceMinion` |
-| Instruction / Training / Planning | `PlanningMinion` |
-| Image Generation | `ImageGenerationMinion` |
-| Image Analysis | `ImageAnalysisMinion` |
-| Image Editing | `ImageEditingMinion` |
-| Translation API | `TranslationMinion` |
-| Transcription API | `TranscriptionMinion` |
-| Speech API | `SpeechMinion` |
+| Guro workflow category                   | Minion class            |
+|------------------------------------------|-------------------------|
+| Research / Academic                      | `ResearchMinion`        |
+| Writing / Administrative                 | `WritingMinion`         |
+| Compliance / Legal / Budget              | `ComplianceMinion`      |
+| Business / Finance / Marketing           | `BusinessMinion`        |
+| Software Engineering / Software Engineer | `CodingMinion`          |
+| Data Analytics                           | `DataMinion`            |
+| Data Governance                          | `GovernanceMinion`      |
+| Instruction / Training / Planning        | `PlanningMinion`        |
+| Image Generation                         | `ImageGenerationMinion` |
+| Image Analysis                           | `ImageAnalysisMinion`   |
+| Image Editing                            | `ImageEditingMinion`    |
+| Translation API                          | `TranslationMinion`     |
+| Transcription API                        | `TranscriptionMinion`   |
+| Speech API                               | `SpeechMinion`          |
 
 Prompt Engineering is intentionally excluded. Concrete classes define the workflow role and
 default display name. The selected model, Guro instruction, and provider tools define the runtime
@@ -126,8 +126,7 @@ result = minion.run( 'Research the requested topic.' )
 
 ### Grok
 
-Grok requires matching provider schemas and local callables only for client-executed function
-tools. xAI-hosted tools do not require entries in `functions`.
+Grok requires matching provider schemas and local callables when tools are enabled.
 
 ```python
 from fonky.grok import tools
@@ -200,34 +199,34 @@ result = minion.run( 'Draft the requested documentation.' )
 
 ### Common arguments
 
-| Argument | Type | Default | Description |
-|---|---|---:|---|
-| `model` | `str` | Required | Provider model identifier |
-| `instructions` | `str` | Required | System instructions, including Guro instruction text |
-| `tools` | Provider-specific sequence or `None` | `None` | Optional provider-native tools |
-| `max_turns` | `int` | `10` | Maximum model turns for one execution |
-| `name` | `str` or `None` | `None` | Overrides the concrete class display name |
+| Argument       | Type                                 |  Default | Description                                          |
+|----------------|--------------------------------------|---------:|------------------------------------------------------|
+| `model`        | `str`                                | Required | Provider model identifier                            |
+| `instructions` | `str`                                | Required | System instructions, including Guro instruction text |
+| `tools`        | Provider-specific sequence or `None` |   `None` | Optional provider-native tools                       |
+| `max_turns`    | `int`                                |     `10` | Maximum model turns for one execution                |
+| `name`         | `str` or `None`                      |   `None` | Overrides the concrete class display name            |
 
 ### Provider-specific arguments
 
-| Provider | Argument | Type | Default | Description |
-|---|---|---|---:|---|
-| Grok | `functions` | `Sequence[ToolFunction]` or `None` | `None` | Local callables matching Grok tool schemas |
-| Grok | `api_key` | `str` or `None` | `None` | Overrides `XAI_API_KEY` |
-| Claude | `max_tokens` | `int` | `4096` | Maximum generated tokens |
-| Claude | `api_key` | `str` or `None` | `None` | Overrides `ANTHROPIC_API_KEY` |
-| Mistral | `functions` | `Sequence[ToolFunction]` or `None` | `None` | Local callables matching function-tool schemas |
-| Mistral | `api_key` | `str` or `None` | `None` | Overrides `MISTRAL_API_KEY` |
+| Provider | Argument     | Type                                | Default | Description                                    |
+|----------|--------------|-------------------------------------|--------:|------------------------------------------------|
+| Grok     | `functions`  | `Sequence[ToolFunction]` or `None`  |  `None` | Local callables matching Grok tool schemas     |
+| Grok     | `api_key`    | `str` or `None`                     |  `None` | Overrides `XAI_API_KEY`                        |
+| Claude   | `max_tokens` | `int`                               |  `4096` | Maximum generated tokens                       |
+| Claude   | `api_key`    | `str` or `None`                     |  `None` | Overrides `ANTHROPIC_API_KEY`                  |
+| Mistral  | `functions`  | `Sequence[ToolFunction]` or `None`  |  `None` | Local callables matching function-tool schemas |
+| Mistral  | `api_key`    | `str` or `None`                     |  `None` | Overrides `MISTRAL_API_KEY`                    |
 
 ## Execution Reference
 
-| Provider | `run` return | `run_async` return | `stream` return |
-|---|---|---|---|
-| OpenAI | `RunResult` | `RunResult` | `RunResultStreaming` |
-| Gemini | Final `Event` | Final `Event` | `AsyncIterator[Event]` |
-| Grok | `Response` | `Response` | `AsyncIterator[tuple[Response, Chunk]]` |
-| Claude | `BetaMessage` | `BetaMessage` | `BetaAsyncStreamingToolRunner[object]` |
-| Mistral | `ChatCompletionResponse` | `ChatCompletionResponse` | `Iterator[CompletionEvent]` |
+| Provider | `run` return             | `run_async` return       | `stream` return                         |
+|----------|--------------------------|--------------------------|-----------------------------------------|
+| OpenAI   | `RunResult`              | `RunResult`              | `RunResultStreaming`                    |
+| Gemini   | Final `Event`            | Final `Event`            | `AsyncIterator[Event]`                  |
+| Grok     | `Response`               | `Response`               | `AsyncIterator[tuple[Response, Chunk]]` |
+| Claude   | `BetaMessage`            | `BetaMessage`            | `BetaAsyncStreamingToolRunner[object]`  |
+| Mistral  | `ChatCompletionResponse` | `ChatCompletionResponse` | `Iterator[CompletionEvent]`             |
 
 Asynchronous execution:
 
@@ -247,136 +246,15 @@ final provider response.
 
 ## Tool Contracts
 
-| Provider | Accepted tool contract |
-|---|---|
-| OpenAI | OpenAI Agents SDK `Tool` objects |
-| Gemini | Callable, `BaseTool`, or `BaseToolset` |
-| Grok | xAI `chat_pb2.Tool`; local function schemas require identically named callables |
-| Claude | `ClaudeTool`: Anthropic `BetaFunctionTool` or `BetaToolUnionParam` |
-| Mistral | `CreateAgentRequestTool` schemas; local function tools require identically named callables |
+| Provider | Accepted tool contract                                                                     |
+|----------|--------------------------------------------------------------------------------------------|
+| OpenAI   | OpenAI Agents SDK `Tool` objects                                                           |
+| Gemini   | Callable, `BaseTool`, or `BaseToolset`                                                     |
+| Grok     | `chat_pb2.Tool` schemas plus identically named local callables                             |
+| Claude   | Anthropic `BetaFunctionTool` objects                                                       |
+| Mistral  | `CreateAgentRequestTool` schemas; local function tools require identically named callables |
 
 Grok and Mistral reject duplicate, missing, or extra local function names before execution.
-Provider-hosted tools execute on the provider and therefore do not require local callables.
-
-## Native Provider Tools
-
-| Provider | Native tools exported by the provider module |
-|---|---|
-| OpenAI | `WebSearchTool`, `FileSearchTool`, `CodeInterpreterTool`, `ImageGenerationTool` |
-| Gemini | `google_search`, `url_context`, `VertexAiSearchTool` |
-| Grok | `web_search`, `code_execution`, `collections_search`, `image_generation` |
-| Claude | Web search, web fetch, and code execution through `BetaToolUnionParam` definitions |
-| Mistral | `WebSearchTool`, `CodeInterpreterTool`, `ImageGenerationTool`, `DocumentLibraryTool` |
-
-Native tools remain optional and provider-specific. Do not pass a native tool from one provider to
-another provider's Minion.
-
-### OpenAI native tools
-
-```python
-from minions.gpt import FileSearchTool, ResearchMinion, WebSearchTool
-
-
-minion = ResearchMinion(
-    model='gpt-5.6-sol',
-    instructions='Research the question using current and indexed sources.',
-    tools=[
-        WebSearchTool( ),
-        FileSearchTool( vector_store_ids=[ 'vs_...' ] ),
-    ],
-)
-```
-
-`CodeInterpreterTool` and `ImageGenerationTool` accept their native OpenAI tool configuration
-objects. Minions passes those configurations to the OpenAI Agents SDK unchanged.
-
-### Gemini native tools
-
-```python
-from minions.gemini import ResearchMinion, VertexAiSearchTool
-
-
-minion = ResearchMinion(
-    model='gemini-2.5-flash',
-    instructions='Research the configured enterprise data store.',
-    tools=[
-        VertexAiSearchTool(
-            data_store_id=(
-                'projects/project/locations/global/collections/default_collection/'
-                'dataStores/store'
-            ),
-        ),
-    ],
-)
-```
-
-`google_search` and `url_context` are native ADK tool objects and can be imported directly from
-`minions.gemini`. Supported tool combinations depend on the selected Gemini model and ADK rules.
-
-### Grok native tools
-
-```python
-from minions.grok import DataMinion, code_execution, collections_search, web_search
-
-
-minion = DataMinion(
-    model='grok-4.5',
-    instructions='Research and analyze the requested subject.',
-    tools=[
-        web_search( ),
-        code_execution( ),
-        collections_search( collection_ids=[ 'collection-id' ] ),
-    ],
-)
-```
-
-The `image_generation` constructor is also exported from `minions.grok`. xAI executes these tools
-on its servers; `functions` remains reserved for client-executed function schemas.
-
-### Claude native tools
-
-```python
-from minions.claude import ResearchMinion
-
-
-minion = ResearchMinion(
-    model='claude-sonnet-4-6',
-    instructions='Research and analyze the requested subject.',
-    tools=[
-        { 'type': 'web_search_20260318', 'name': 'web_search' },
-        { 'type': 'web_fetch_20260318', 'name': 'web_fetch' },
-        { 'type': 'code_execution_20260521', 'name': 'code_execution' },
-    ],
-)
-```
-
-Anthropic executes these server tools. Local tools decorated with `anthropic.beta_tool` can appear
-in the same `tools` sequence and are executed by Anthropic's native tool runner.
-
-### Mistral native tools
-
-```python
-from minions.mistral import (
-    CodeInterpreterTool,
-    DataMinion,
-    DocumentLibraryTool,
-    WebSearchTool,
-)
-
-
-minion = DataMinion(
-    model='mistral-medium-latest',
-    instructions='Research and analyze the requested subject.',
-    tools=[
-        WebSearchTool( ),
-        CodeInterpreterTool( ),
-        DocumentLibraryTool( library_ids=[ 'library-id' ] ),
-    ],
-)
-```
-
-`ImageGenerationTool` is also exported from `minions.mistral`. Mistral executes native tools;
-`functions` remains reserved for client-executed function schemas.
 
 ## Category Templates
 
