@@ -1,26 +1,28 @@
-###### minions
-![](https://github.com/is-leeroy-jenkins/minions/blob/main/resources/images/minions-project.png)
+# Minions
 
-___
+![Minions project](resources/images/minions-project.png)
 
-A lightweight Python framework for reusable, provider-specific AI workflow agents.
+Minions provides small, provider-specific workflow agents. Guro supplies reusable instructions,
+Fonky supplies provider-native tools, and Minions owns the execution workflow. A workflow never
+translates or mixes tools between providers.
 
-The shared `Minion` class defines the common execution contract. Concrete agents are named for
-the work they perform and live inside their provider namespace. Tools and agents used in one
-workflow come from the same provider.
+## Design
 
-## Provider Support
+Each flat provider module exports `Minion` and `DataMinion`:
 
-| Provider | Agent | Tool contract | Synchronous | Asynchronous | Streaming |
-|----------|-------|---------------|-------------|--------------|-----------|
-| OpenAI | `minions.gpt.DataAgent` | OpenAI Agents SDK tools | Yes | Yes | Yes |
-| Google | `minions.gemini.DataAgent` | Google ADK callables | Yes | Yes | Yes |
-| xAI | `minions.grok.DataAgent` | xAI schemas paired with callables | Yes | Yes | Yes |
-| Anthropic | `minions.claude.DataAgent` | Anthropic `@beta_tool` objects | Yes | Yes | Yes |
-| Mistral AI | `minions.mistral.DataAgent` | Python callables | Yes | Yes | Native stream |
+| Provider module | Native design | Complete execution |
+|---|---|---|
+| `minions.gpt` | `Minion(agents.Agent)` | sync, async, stream |
+| `minions.gemini` | `Minion(google.adk.Agent)` | sync, async, SSE stream |
+| `minions.grok` | wraps xAI sync/async chats | sync, async, stream |
+| `minions.claude` | wraps Anthropic tool runners | sync, async, stream |
+| `minions.mistral` | wraps a Mistral remote Agent | sync, async, stream |
 
-Every implementation returns its provider-native result. Minions does not translate tools or
-normalize results across providers.
+`DataMinion` inherits its provider's `Minion`. There is no cross-provider abstract base class.
+Tools are optional for every provider. OpenAI, Gemini, and Claude execute provider-native tools
+directly. Grok and Mistral accept provider schemas and matching local functions; when supplied,
+the two name sets must match exactly. Their streaming methods execute requested tools and resume
+streaming until the model finishes.
 
 ## Installation
 
@@ -31,172 +33,110 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-Set the credential required by the workflow provider:
+Set the API key for the provider being used.
 
-```powershell
-$env:OPENAI_API_KEY = "..."
-$env:GOOGLE_API_KEY = "..."
-$env:XAI_API_KEY = "..."
-$env:ANTHROPIC_API_KEY = "..."
-$env:MISTRAL_API_KEY = "..."
-```
-
-## OpenAI Data Workflow
+## OpenAI
 
 ```python
 from fonky.gpt import tools
 from guro import instructions
-from minions.gpt import DataAgent
+from minions.gpt import DataMinion
 
 
-agent = DataAgent(
-    name='Data Agent',
-    model='gpt-5.6-terra',
+minion = DataMinion(
+    model='gpt-5.6-sol',
     instructions=instructions.get( 'DATA_SCIENTIST' ),
-    tools=[
-        tools.fetch_wikipedia,
-        tools.load_csv,
-    ],
-    max_turns=10,
+    tools=[ tools.fetch_wikipedia, tools.load_csv ],
 )
-
-result = agent.run( 'Analyze the available evidence and summarize the findings.' )
-print( result.final_output )
+result = minion.run( 'Analyze the available evidence.' )
 ```
 
-Fonky GPT tools are decorated OpenAI tool objects and are passed directly to `DataAgent`.
-
-## Gemini Data Workflow
+## Gemini
 
 ```python
 from fonky.gemini import tools
 from guro import instructions
-from minions.gemini import DataAgent
+from minions.gemini import DataMinion
 
 
-agent = DataAgent(
-    name='Data Agent',
+minion = DataMinion(
     model='gemini-2.5-flash',
     instructions=instructions.get( 'DATA_SCIENTIST' ),
-    tools=[
-        tools.fetch_wikipedia,
-        tools.load_csv,
-    ],
-    max_turns=10,
+    tools=[ tools.fetch_wikipedia, tools.load_csv ],
 )
-
-result = agent.run( 'Analyze the available evidence and summarize the findings.' )
+result = minion.run( 'Analyze the available evidence.' )
 ```
 
-Google ADK registers the Fonky Gemini callables and executes their tool calls within the runner.
-
-## Grok Data Workflow
+## Grok
 
 ```python
 from fonky.grok import tools
 from guro import instructions
-from minions.grok import DataAgent
+from minions.grok import DataMinion
 
 
-agent = DataAgent(
-    name='Data Agent',
+minion = DataMinion(
     model='grok-4.5',
     instructions=instructions.get( 'DATA_SCIENTIST' ),
-    tools=[
-        tools.wikipedia_fetch_tool,
-        tools.csv_tool,
-    ],
-    functions=[
-        tools.fetch_wikipedia,
-        tools.load_csv,
-    ],
-    max_turns=10,
+    tools=[ tools.wikipedia_fetch_tool, tools.csv_tool ],
+    functions=[ tools.fetch_wikipedia, tools.load_csv ],
 )
-
-result = agent.run( 'Analyze the available evidence and summarize the findings.' )
+result = minion.run( 'Analyze the available evidence.' )
 ```
 
-The xAI SDK uses separate provider schemas and executable functions. `DataAgent` requires an exact
-name match, executes every requested callable, and submits each result with its tool-call ID.
-
-## Claude Data Workflow
+## Claude
 
 ```python
 from fonky.claude import tools
 from guro import instructions
-from minions.claude import DataAgent
+from minions.claude import DataMinion
 
 
-agent = DataAgent(
-    name='Data Agent',
+minion = DataMinion(
     model='claude-sonnet-4-6',
     instructions=instructions.get( 'DATA_SCIENTIST' ),
-    tools=[
-        tools.fetch_wikipedia,
-        tools.load_csv,
-    ],
-    max_turns=10,
-    max_tokens=4096,
+    tools=[ tools.fetch_wikipedia, tools.load_csv ],
 )
-
-result = agent.run( 'Analyze the available evidence and summarize the findings.' )
+result = minion.run( 'Analyze the available evidence.' )
 ```
 
-Fonky Claude tools are Anthropic `@beta_tool` objects. The synchronous and asynchronous Anthropic
-tool runners execute them automatically; the async adapter preserves each Fonky tool schema.
-
-## Mistral Data Workflow
+## Mistral
 
 ```python
 from fonky.mistral import tools
 from guro import instructions
-from minions.mistral import DataAgent
+from minions.mistral import DataMinion
 
 
-agent = DataAgent(
-    name='Data Agent',
+minion = DataMinion(
     model='mistral-medium-latest',
     instructions=instructions.get( 'DATA_SCIENTIST' ),
-    tools=[
-        tools.fetch_wikipedia,
-        tools.load_csv,
-    ],
-    max_turns=10,
+    tools=[ tools.wikipedia_fetch_tool, tools.csv_tool ],
+    functions=[ tools.fetch_wikipedia, tools.load_csv ],
 )
-
-result = agent.run( 'Analyze the available evidence and summarize the findings.' )
-print( result.choices[ 0 ].message.content )
+result = minion.run( 'Analyze the available evidence.' )
 ```
 
-`DataAgent` creates Mistral function schemas and completes local tool handling for synchronous and
-asynchronous workflows. Mistral streaming returns the provider-native stream; streamed function
-calls remain caller-controlled.
-
-## Async Execution
-
-All five agents implement the shared asynchronous contract:
+A tool-free workflow omits both optional arguments:
 
 ```python
-result = await agent.run_async( 'Analyze the supplied dataset.' )
+minion = DataMinion(
+    model='provider-model',
+    instructions='Answer directly without tools.',
+)
 ```
 
-## Streaming
+## Async and streaming
 
-Streaming retains the native provider interface. OpenAI returns an Agents SDK streaming result.
-Gemini and Grok return async iterators. Claude returns an Anthropic async streaming tool runner.
-Mistral returns its native synchronous event stream.
+```python
+result = await minion.run_async( 'Analyze the supplied data.' )
+```
 
-## Package Boundaries
-
-| Package | Responsibility |
-|---------|----------------|
-| `guro` | Reusable instruction strings |
-| `fonky` | Provider-compatible tools |
-| `minions` | Provider-specific workflow agents |
+OpenAI returns its native `RunResultStreaming`. Gemini and Grok expose async event iterators.
+Claude returns its native async streaming tool runner. Mistral exposes a synchronous iterator of
+native `CompletionEvent` objects. Every pathway owns tool execution through the final response.
 
 ## Development
-
-Install the project and test dependencies, then run the complete suite:
 
 ```powershell
 python -m pip install -e .
@@ -205,14 +145,5 @@ python -m pytest
 python -m build
 ```
 
-Tests mock provider execution and do not consume API credits.
-
-## Related Projects
-
-- [fonky](https://github.com/is-leeroy-jenkins/fonky) - provider-compatible AI tools
-- [guro](https://github.com/is-leeroy-jenkins/guro) - reusable instruction library
-- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
-- [Google Agent Development Kit](https://google.github.io/adk-docs/)
-- [xAI Python SDK](https://github.com/xai-org/xai-sdk-python)
-- [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python)
-- [Mistral AI Python SDK](https://github.com/mistralai/client-python)
+The test suite uses provider-native types with mocked network boundaries, so it consumes no API
+credits.
