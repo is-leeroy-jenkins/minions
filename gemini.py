@@ -25,7 +25,7 @@ GeminiTool = Callable[ ..., object ] | BaseTool | BaseToolset
 class Minion( Agent ):
     """Provider-native Gemini workflow agent."""
 
-    minion_name: ClassVar[ str ] = 'General Minion'
+    minion_name: ClassVar[ str ] = 'Gemini Minion'
     display_name: str
     max_turns: int = 10
     prompt: str = ''
@@ -54,14 +54,8 @@ class Minion( Agent ):
         display_name = name or self.minion_name
         throw_if( 'name', display_name )
         provider_name = self.normalize_name( display_name )
-        super( ).__init__(
-            name=provider_name,
-            display_name=display_name,
-            model=model,
-            instruction=instructions,
-            tools=list( tools or [ ] ),
-            max_turns=max_turns,
-        )
+        super( ).__init__( name=provider_name, display_name=display_name, model=model,
+            instruction=instructions, tools=list( tools or [ ] ), max_turns=max_turns, )
 
 
     @staticmethod
@@ -132,12 +126,9 @@ class Minion( Agent ):
         throw_if( 'prompt', prompt )
         self.prompt = prompt
         runner = self.create_runner( )
-        self.events = list( runner.run(
-            user_id=self.name,
-            session_id=uuid4( ).hex,
+        self.events = list( runner.run( user_id=self.name, session_id=uuid4( ).hex,
             new_message=self.create_content( prompt ),
-            run_config=RunConfig( max_llm_calls=self.max_turns ),
-        ) )
+            run_config=RunConfig( max_llm_calls=self.max_turns ), ) )
         self.result = self.select_result( self.events )
         return self.result
 
@@ -154,12 +145,10 @@ class Minion( Agent ):
         throw_if( 'prompt', prompt )
         self.prompt = prompt
         runner = self.create_runner( )
-        self.events = [ event async for event in runner.run_async(
-            user_id=self.name,
-            session_id=uuid4( ).hex,
-            new_message=self.create_content( prompt ),
-            run_config=RunConfig( max_llm_calls=self.max_turns ),
-        ) ]
+        self.events = [ event async for event in
+                        runner.run_async( user_id=self.name, session_id=uuid4( ).hex,
+                            new_message=self.create_content( prompt ),
+                            run_config=RunConfig( max_llm_calls=self.max_turns ), ) ]
         self.result = self.select_result( self.events )
         return self.result
 
@@ -177,14 +166,10 @@ class Minion( Agent ):
         self.prompt = prompt
         self.events = [ ]
         runner = self.create_runner( )
-        async for event in runner.run_async(
-                user_id=self.name,
-                session_id=uuid4( ).hex,
+        async for event in runner.run_async( user_id=self.name, session_id=uuid4( ).hex,
                 new_message=self.create_content( prompt ),
-                run_config=RunConfig(
-                    max_llm_calls=self.max_turns,
-                    streaming_mode=StreamingMode.SSE,
-                ) ):
+                run_config=RunConfig( max_llm_calls=self.max_turns,
+                    streaming_mode=StreamingMode.SSE, ) ):
             self.events.append( event )
             if event.is_final_response( ):
                 self.result = event
@@ -197,6 +182,12 @@ class DataMinion( Minion ):
     """Gemini Minion specialized for data workflows."""
 
     minion_name: ClassVar[ str ] = 'Data Minion'
+
+
+class GovernanceMinion( Minion ):
+    """Gemini Minion specialized for governance workflows."""
+
+    minion_name: ClassVar[ str ] = 'Governance Minion'
 
 
 class ResearchMinion( Minion ):
@@ -270,21 +261,7 @@ class SpeechMinion( Minion ):
 
     minion_name: ClassVar[ str ] = 'Speech Minion'
 
-
-__all__: list[ str ] = [
-    'BusinessMinion',
-    'CodingMinion',
-    'ComplianceMinion',
-    'DataMinion',
-    'GeminiTool',
-    'ImageAnalysisMinion',
-    'ImageEditingMinion',
-    'ImageGenerationMinion',
-    'Minion',
-    'PlanningMinion',
-    'ResearchMinion',
-    'SpeechMinion',
-    'TranscriptionMinion',
-    'TranslationMinion',
-    'WritingMinion',
-]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
+        'GovernanceMinion', 'GeminiTool', 'ImageAnalysisMinion', 'ImageEditingMinion',
+        'ImageGenerationMinion', 'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion',
+        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]

@@ -20,7 +20,7 @@ from . import throw_if, throw_if_less_than
 class Minion:
     """Claude workflow agent backed by Anthropic's native tool runner."""
 
-    minion_name: ClassVar[ str ] = 'General Minion'
+    minion_name: ClassVar[ str ] = 'Claude Minion'
 
     def __init__( self, model: str, instructions: str,
             tools: Sequence[ BetaFunctionTool ] | None=None, max_turns: int=10,
@@ -72,15 +72,11 @@ class Minion:
         """
         async def invoke( **arguments: object ) -> object:
             return await asyncio.to_thread( tool.func, **arguments )
-
+        
         invoke.__name__ = tool.name
         invoke.__doc__ = tool.description
-        return beta_async_tool(
-            invoke,
-            name=tool.name,
-            description=tool.description,
-            input_schema=tool.input_schema,
-        )
+        return beta_async_tool( invoke, name=tool.name, description=tool.description,
+            input_schema=tool.input_schema, )
 
 
     def run( self, prompt: str ) -> BetaMessage:
@@ -93,17 +89,12 @@ class Minion:
             BetaMessage: Final provider-native message.
         """
         throw_if( 'prompt', prompt )
-        runner = self.client.beta.messages.tool_runner(
-            model=self.model,
-            max_tokens=self.max_tokens,
-            max_iterations=self.max_turns,
-            system=self.instructions,
-            tools=self.tools,
-            messages=[ { 'role': 'user', 'content': prompt } ],
-        )
+        runner = self.client.beta.messages.tool_runner( model=self.model,
+            max_tokens=self.max_tokens, max_iterations=self.max_turns, system=self.instructions,
+            tools=self.tools, messages=[ { 'role': 'user', 'content': prompt } ], )
         result = runner.until_done( )
         self.result = result
-        return result
+        return self.result
 
 
     async def run_async( self, prompt: str ) -> BetaMessage:
@@ -156,6 +147,12 @@ class DataMinion( Minion ):
     """Claude Minion specialized for data workflows."""
 
     minion_name: ClassVar[ str ] = 'Data Minion'
+
+
+class GovernanceMinion( Minion ):
+    """Claude Minion specialized for governance workflows."""
+
+    minion_name: ClassVar[ str ] = 'Governance Minion'
 
 
 class ResearchMinion( Minion ):
@@ -229,20 +226,7 @@ class SpeechMinion( Minion ):
 
     minion_name: ClassVar[ str ] = 'Speech Minion'
 
-
-__all__: list[ str ] = [
-    'BusinessMinion',
-    'CodingMinion',
-    'ComplianceMinion',
-    'DataMinion',
-    'ImageAnalysisMinion',
-    'ImageEditingMinion',
-    'ImageGenerationMinion',
-    'Minion',
-    'PlanningMinion',
-    'ResearchMinion',
-    'SpeechMinion',
-    'TranscriptionMinion',
-    'TranslationMinion',
-    'WritingMinion',
-]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
+        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
+        'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'TranscriptionMinion',
+        'TranslationMinion', 'WritingMinion', ]

@@ -12,7 +12,7 @@ from . import throw_if, throw_if_less_than
 class Minion( Agent ):
     """Provider-native OpenAI workflow agent."""
 
-    minion_name: ClassVar[ str ] = 'General Minion'
+    minion_name: ClassVar[ str ] = 'GPT Minion'
     max_turns: int
     result: RunResult | RunResultStreaming | None
 
@@ -37,12 +37,8 @@ class Minion( Agent ):
         throw_if_less_than( 'max_turns', max_turns, 1 )
         agent_name = name or self.minion_name
         throw_if( 'name', agent_name )
-        super( ).__init__(
-            name=agent_name,
-            model=model,
-            instructions=instructions,
-            tools=list( tools or [ ] ),
-        )
+        super( ).__init__( name=agent_name, model=model, instructions=instructions,
+            tools=list( tools or [ ] ), )
         self.max_turns = max_turns
         self.result = None
 
@@ -96,6 +92,12 @@ class DataMinion( Minion ):
     """OpenAI Minion specialized for data workflows."""
 
     minion_name: ClassVar[ str ] = 'Data Minion'
+
+
+class GovernanceMinion( Minion ):
+    """OpenAI Minion specialized for governance workflows."""
+
+    minion_name: ClassVar[ str ] = 'Governance Minion'
 
 
 class ResearchMinion( Minion ):
@@ -169,20 +171,7 @@ class SpeechMinion( Minion ):
 
     minion_name: ClassVar[ str ] = 'Speech Minion'
 
-
-__all__: list[ str ] = [
-    'BusinessMinion',
-    'CodingMinion',
-    'ComplianceMinion',
-    'DataMinion',
-    'ImageAnalysisMinion',
-    'ImageEditingMinion',
-    'ImageGenerationMinion',
-    'Minion',
-    'PlanningMinion',
-    'ResearchMinion',
-    'SpeechMinion',
-    'TranscriptionMinion',
-    'TranslationMinion',
-    'WritingMinion',
-]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
+        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
+        'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'TranscriptionMinion',
+        'TranslationMinion', 'WritingMinion', ]

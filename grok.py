@@ -23,7 +23,7 @@ ToolFunction = Callable[ ..., object | Awaitable[ object ] ]
 class Minion:
     """Grok workflow agent backed by xAI client-side tool calling."""
 
-    minion_name: ClassVar[ str ] = 'General Minion'
+    minion_name: ClassVar[ str ] = 'Grok Minion'
 
     def __init__( self, model: str, instructions: str,
             tools: Sequence[ chat_pb2.Tool ] | None=None,
@@ -265,6 +265,13 @@ class DataMinion( Minion ):
     minion_name: ClassVar[ str ] = 'Data Minion'
 
 
+class GovernanceMinion( Minion ):
+    """Grok Minion specialized for governance workflows."""
+
+    minion_name: ClassVar[ str ] = 'Governance Minion'
+
+
+
 class ResearchMinion( Minion ):
     """Grok Minion specialized for research workflows."""
 
@@ -336,21 +343,7 @@ class SpeechMinion( Minion ):
 
     minion_name: ClassVar[ str ] = 'Speech Minion'
 
-
-__all__: list[ str ] = [
-    'BusinessMinion',
-    'CodingMinion',
-    'ComplianceMinion',
-    'DataMinion',
-    'ImageAnalysisMinion',
-    'ImageEditingMinion',
-    'ImageGenerationMinion',
-    'Minion',
-    'PlanningMinion',
-    'ResearchMinion',
-    'SpeechMinion',
-    'ToolFunction',
-    'TranscriptionMinion',
-    'TranslationMinion',
-    'WritingMinion',
-]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
+        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
+        'Minion', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'ToolFunction',
+        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]

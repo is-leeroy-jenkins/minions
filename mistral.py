@@ -46,7 +46,7 @@ class AggregatedResponse( TypedDict ):
 class Minion:
     """Mistral workflow agent with complete local tool execution."""
 
-    minion_name: ClassVar[ str ] = 'General Minion'
+    minion_name: ClassVar[ str ] = 'Mistral Minion'
 
     def __init__( self, model: str, instructions: str,
             tools: Sequence[ MistralTool ] | None=None,
@@ -335,11 +335,16 @@ class DataMinion( Minion ):
     minion_name: ClassVar[ str ] = 'Data Minion'
 
 
+class GovernanceMinion( Minion ):
+    """Mistral Minion specialized for governance workflows."""
+
+    minion_name: ClassVar[ str ] = 'Governance Minion'
+
+
 class ResearchMinion( Minion ):
     """Mistral Minion specialized for research workflows."""
 
     minion_name: ClassVar[ str ] = 'Research Minion'
-
 
 class CodingMinion( Minion ):
     """Mistral Minion specialized for software workflows."""
@@ -406,22 +411,7 @@ class SpeechMinion( Minion ):
 
     minion_name: ClassVar[ str ] = 'Speech Minion'
 
-
-__all__: list[ str ] = [
-    'BusinessMinion',
-    'CodingMinion',
-    'ComplianceMinion',
-    'DataMinion',
-    'ImageAnalysisMinion',
-    'ImageEditingMinion',
-    'ImageGenerationMinion',
-    'Minion',
-    'MistralTool',
-    'PlanningMinion',
-    'ResearchMinion',
-    'SpeechMinion',
-    'ToolFunction',
-    'TranscriptionMinion',
-    'TranslationMinion',
-    'WritingMinion',
-]
+__all__: list[ str ] = [ 'BusinessMinion', 'CodingMinion', 'ComplianceMinion', 'DataMinion',
+        'GovernanceMinion', 'ImageAnalysisMinion', 'ImageEditingMinion', 'ImageGenerationMinion',
+        'Minion', 'MistralTool', 'PlanningMinion', 'ResearchMinion', 'SpeechMinion', 'ToolFunction',
+        'TranscriptionMinion', 'TranslationMinion', 'WritingMinion', ]

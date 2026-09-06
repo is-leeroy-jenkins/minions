@@ -1,0 +1,132 @@
+Index: __init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>'''\r\n  ******************************************************************************************\r\n      Assembly:                minions\r\n      Filename:                init.py\r\n      Author:                  Terry D. Eppler\r\n      Created:                 05-31-2022\r\n\r\n      Last Modified By:        Terry D. Eppler\r\n      Last Modified On:        05-01-2025\r\n  ******************************************************************************************\r\n  <copyright file=\"init.py\" company=\"Terry D. Eppler\">\r\n\r\n\t     init.py\r\n\t     Copyright ©  2022  Terry Eppler\r\n\r\n     Permission is hereby granted, free of charge, to any person obtaining a copy\r\n     of this software and associated documentation files (the “Software”),\r\n     to deal in the Software without restriction,\r\n     including without limitation the rights to use,\r\n     copy, modify, merge, publish, distribute, sublicense,\r\n     and/or sell copies of the Software,\r\n     and to permit persons to whom the Software is furnished to do so,\r\n     subject to the following conditions:\r\n\r\n     The above copyright notice and this permission notice shall be included in all\r\n     copies or substantial portions of the Software.\r\n\r\n     THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,\r\n     INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n     FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.\r\n     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\r\n     DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,\r\n     ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER\r\n     DEALINGS IN THE SOFTWARE.\r\n\r\n     You can contact me at:  terryeppler@gmail.com or eppler.terry@epa.gov\r\n\r\n  </copyright>\r\n  <summary>\r\n    init.py\r\n  </summary>\r\n  ******************************************************************************************\r\n'''\r\nfrom __future__ import annotations\r\n\r\nfrom abc import ABC, abstractmethod\r\nfrom typing import Any\r\n\r\n\r\ndef throw_if( name: str, value: object ) -> None:\r\n    \"\"\"Input guard.\r\n\r\n    Purpose:\r\n        Validates that a required argument contains a usable value before the surrounding\r\n        workflow continues.\r\n\r\n    Args:\r\n        name (str): Name of the argument being validated.\r\n        value (object): Value supplied to the argument.\r\n\r\n    Returns:\r\n        None: This function performs validation and does not return a value.\r\n    \"\"\"\r\n    if not value:\r\n        raise ValueError( f'Argument \"{name}\" cannot be empty!' )\r\n\r\n\r\nclass Minion( ABC ):\r\n    \"\"\"Shared workflow-agent contract.\r\n\r\n    Purpose:\r\n        Stores configuration and execution state shared by provider-specific workflow agents.\r\n        Concrete agents retain their provider's native runtime and result types.\r\n\r\n    Args:\r\n        name (str): Human-readable name assigned to the workflow agent.\r\n        model (str): Provider model identifier used by the workflow agent.\r\n        instructions (str): System-level instructions controlling agent behavior.\r\n        tools (list[Any]): Tools created for the workflow agent's provider.\r\n        max_turns (int): Maximum number of model turns allowed for one execution.\r\n    \"\"\"\r\n\r\n    name: str\r\n    model: str\r\n    instructions: str\r\n    tools: list[ Any ]\r\n    max_turns: int\r\n    provider: Any\r\n    result: Any\r\n    prompt: str\r\n\r\n\r\n    def __init__( self, name: str, model: str, instructions: str, tools: list[ Any ],\r\n            max_turns: int=10 ) -> None:\r\n        \"\"\"Initialize shared workflow-agent state.\r\n\r\n        Purpose:\r\n            Validates and stores the configuration used by a provider-specific workflow agent.\r\n\r\n        Args:\r\n            name (str): Human-readable name assigned to the workflow agent.\r\n            model (str): Provider model identifier used by the workflow agent.\r\n            instructions (str): System-level instructions controlling agent behavior.\r\n            tools (list[Any]): Tools created for the workflow agent's provider.\r\n            max_turns (int): Maximum number of model turns allowed for one execution.\r\n\r\n        Returns:\r\n            None: Initialization stores the validated workflow-agent configuration.\r\n        \"\"\"\r\n        throw_if( 'name', name )\r\n        throw_if( 'model', model )\r\n        throw_if( 'instructions', instructions )\r\n        throw_if( 'tools', tools )\r\n        throw_if( 'max_turns', max_turns )\r\n\r\n        if max_turns < 1:\r\n            raise ValueError( 'Argument \"max_turns\" must be greater than zero!' )\r\n\r\n        self.name = name\r\n        self.model = model\r\n        self.instructions = instructions\r\n        self.tools = tools\r\n        self.max_turns = max_turns\r\n        self.provider = None\r\n        self.result = None\r\n        self.prompt = ''\r\n\r\n\r\n    @abstractmethod\r\n    def create( self ) -> Any:\r\n        \"\"\"Create the provider runtime.\r\n\r\n        Purpose:\r\n            Creates the provider-native agent used by the workflow implementation.\r\n\r\n        Returns:\r\n            Any: Provider-native agent instance.\r\n        \"\"\"\r\n        raise NotImplementedError\r\n\r\n\r\n    @abstractmethod\r\n    def run( self, prompt: str ) -> Any:\r\n        \"\"\"Run the workflow agent synchronously.\r\n\r\n        Purpose:\r\n            Executes the provider-native agent and retains its native result.\r\n\r\n        Args:\r\n            prompt (str): User input supplied to the workflow agent.\r\n\r\n        Returns:\r\n            Any: Provider-native execution result.\r\n        \"\"\"\r\n        raise NotImplementedError\r\n\r\n\r\n    @abstractmethod\r\n    async def run_async( self, prompt: str ) -> Any:\r\n        \"\"\"Run the workflow agent asynchronously.\r\n\r\n        Purpose:\r\n            Executes the provider-native agent asynchronously and retains its native result.\r\n\r\n        Args:\r\n            prompt (str): User input supplied to the workflow agent.\r\n\r\n        Returns:\r\n            Any: Provider-native execution result.\r\n        \"\"\"\r\n        raise NotImplementedError\r\n\r\n\r\n    @abstractmethod\r\n    def stream( self, prompt: str ) -> Any:\r\n        \"\"\"Start a streamed workflow-agent execution.\r\n\r\n        Purpose:\r\n            Starts the provider-native streaming workflow and retains its streaming result.\r\n\r\n        Args:\r\n            prompt (str): User input supplied to the workflow agent.\r\n\r\n        Returns:\r\n            Any: Provider-native streaming result.\r\n        \"\"\"\r\n        raise NotImplementedError\r\n\r\n\r\n    def reset( self ) -> None:\r\n        \"\"\"Reset transient execution state.\r\n\r\n        Purpose:\r\n            Clears the most recent prompt and result while retaining agent configuration and the\r\n            provider runtime.\r\n\r\n        Returns:\r\n            None: Transient state is reset in place.\r\n        \"\"\"\r\n        self.result = None\r\n        self.prompt = ''\r\n\r\n\r\n__all__: list[ str ] = [\r\n    'Minion',\r\n    'throw_if',\r\n]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/__init__.py b/__init__.py
+--- a/__init__.py	(revision 9ebfe0c53f7531aba618a7dd964383460d483761)
++++ b/__init__.py	(date 1788654802101)
+@@ -42,26 +42,33 @@
+   ******************************************************************************************
+ '''
+ from __future__ import annotations
+-
+ from abc import ABC, abstractmethod
+ from typing import Any
+ 
+-
+ def throw_if( name: str, value: object ) -> None:
+-    """Input guard.
++    """Throw if.
+ 
+-    Purpose:
+-        Validates that a required argument contains a usable value before the surrounding
+-        workflow continues.
++	Purpose:
++		Validates that a required argument contains a usable value so failures occur before
++		provider, filesystem, or parsing work begins.
+ 
+-    Args:
+-        name (str): Name of the argument being validated.
+-        value (object): Value supplied to the argument.
++	Args:
++		name (str): Argument name included in validation error messages.
++		value (object): Candidate value to validate or normalize.
+ 
+-    Returns:
+-        None: This function performs validation and does not return a value.
+-    """
+-    if not value:
++	Returns:
++		None: This method updates instance state or validates input and does not return a value.
++
++	Raises:
++		ValueError: Raised when the method cannot satisfy its documented value requirement.
++	"""
++    if value is None:
++        raise ValueError( f'Argument "{name}" cannot be empty!' )
++    
++    if isinstance( value, str ) and (not value.strip( )):
++        raise ValueError( f'Argument "{name}" cannot be empty!' )
++    
++    if isinstance( value, (list, tuple, dict, set) ) and len( value ) == 0:
+         raise ValueError( f'Argument "{name}" cannot be empty!' )
+ 
+ 
+@@ -200,8 +207,4 @@
+         self.result = None
+         self.prompt = ''
+ 
+-
+-__all__: list[ str ] = [
+-    'Minion',
+-    'throw_if',
+-]
++__all__: list[ str ] = [ 'Minion', 'throw_if', ]
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"ALL\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"c2e805f8-c9aa-46f2-b14f-01ddfdd40399\" name=\"Changes\" comment=\"updates\">\r\n      <change beforePath=\"$PROJECT_DIR$/README.md\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/README.md\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;is-leeroy-jenkins&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubDefaultAccount\">\r\n    <option name=\"defaultAccountId\" value=\"78145f30-18cb-443d-a346-237522922b0e\" />\r\n  </component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/is-leeroy-jenkins/minions.git&quot;,\r\n    &quot;accountId&quot;: &quot;78145f30-18cb-443d-a346-237522922b0e&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 6,\r\n  &quot;fromUser&quot;: false\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3Iorz9pFFKJSFbSNcwQf0GplHn2\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"foldersAlwaysOnTop\" value=\"false\" />\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showExcludedFiles\" value=\"false\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n    <option name=\"showMembers\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"ModuleVcsDetector.initialDetectionPerformed\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"RunOnceActivity.typescript.service.memoryLimit.init\": \"true\",\r\n    \"codeWithMe.voiceChat.enabledByDefault\": \"false\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"last_opened_file_path\": \"C:/Users/terry/source/repos/minions/grok\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"settings.editor.selected.configurable\": \"terminal\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\terry\\source\\repos\\minions\\grok\" />\r\n      <recent name=\"C:\\Users\\terry\\source\\repos\\minions\\gemini\" />\r\n      <recent name=\"C:\\Users\\terry\\source\\repos\\minions\\claude\" />\r\n      <recent name=\"C:\\Users\\terry\\source\\repos\\minions\\gpt\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-PY-262.9437.214\" />\r\n        <option value=\"bundled-python-sdk-821f704e66d9-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.9437.214\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"c2e805f8-c9aa-46f2-b14f-01ddfdd40399\" name=\"Changes\" comment=\"\" />\r\n      <created>1788442022222</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1788442022222</updated>\r\n      <workItem from=\"1788442023647\" duration=\"259000\" />\r\n      <workItem from=\"1788442336708\" duration=\"73000\" />\r\n      <workItem from=\"1788444012559\" duration=\"1850000\" />\r\n      <workItem from=\"1788445873343\" duration=\"1286000\" />\r\n      <workItem from=\"1788447705915\" duration=\"1607000\" />\r\n      <workItem from=\"1788457762995\" duration=\"220000\" />\r\n      <workItem from=\"1788458041446\" duration=\"54000\" />\r\n      <workItem from=\"1788475201718\" duration=\"2449000\" />\r\n      <workItem from=\"1788485277326\" duration=\"1368000\" />\r\n      <workItem from=\"1788486837602\" duration=\"602000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788442161445</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788442161445</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788442180066</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788442180066</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788442401733</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788442401733</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788444092453</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788444092453</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788446370889</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788446370889</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788446768090</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788446768090</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788446815210</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788446815210</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788446958809</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788446958809</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788447063633</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788447063633</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788458085390</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788458085390</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788485880813</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788485880813</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788486667532</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788486667532</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00013\" summary=\"updates\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1788486884103</created>\r\n      <option name=\"number\" value=\"00013\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1788486884103</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"14\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"updates\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"updates\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 9ebfe0c53f7531aba618a7dd964383460d483761)
++++ b/.idea/workspace.xml	(date 1788658459264)
+@@ -5,7 +5,9 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="c2e805f8-c9aa-46f2-b14f-01ddfdd40399" name="Changes" comment="updates">
+-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/gpt/agents.py" beforeDir="false" afterPath="$PROJECT_DIR$/gpt/agents.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -58,7 +60,7 @@
+     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+     "codeWithMe.voiceChat.enabledByDefault": "false",
+     "git-widget-placeholder": "main",
+-    "last_opened_file_path": "C:/Users/terry/source/repos/minions/grok",
++    "last_opened_file_path": "C:/Users/terry/source/repos/minions",
+     "node.js.detected.package.eslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+     "nodejs_package_manager_path": "npm",
+@@ -67,6 +69,7 @@
+ }]]></component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
++      <recent name="C:\Users\terry\source\repos\minions" />
+       <recent name="C:\Users\terry\source\repos\minions\grok" />
+       <recent name="C:\Users\terry\source\repos\minions\gemini" />
+       <recent name="C:\Users\terry\source\repos\minions\claude" />
+@@ -97,7 +100,8 @@
+       <workItem from="1788458041446" duration="54000" />
+       <workItem from="1788475201718" duration="2449000" />
+       <workItem from="1788485277326" duration="1368000" />
+-      <workItem from="1788486837602" duration="602000" />
++      <workItem from="1788486837602" duration="3253000" />
++      <workItem from="1788653822289" duration="2265000" />
+     </task>
+     <task id="LOCAL-00001" summary="updates">
+       <option name="closed" value="true" />
+@@ -203,7 +207,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1788486884103</updated>
+     </task>
+-    <option name="localTasksCounter" value="14" />
++    <task id="LOCAL-00014" summary="updates">
++      <option name="closed" value="true" />
++      <created>1788487451743</created>
++      <option name="number" value="00014" />
++      <option name="presentableId" value="LOCAL-00014" />
++      <option name="project" value="LOCAL" />
++      <updated>1788487451743</updated>
++    </task>
++    <option name="localTasksCounter" value="15" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
