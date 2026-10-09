@@ -1,0 +1,79 @@
+name: Publish minions-py to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify release tag and distribution name
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import pathlib
+          import tomllib
+
+          config = tomllib.loads(pathlib.Path('pyproject.toml').read_text(encoding='utf-8'))
+          assert config['project']['name'] == 'minions-py'
+          version = config['project']['version']
+          expected_tag = f'v{version}'
+          actual_tag = os.environ['RELEASE_TAG']
+          assert actual_tag == expected_tag, (
+              f'Release tag {actual_tag!r} must equal {expected_tag!r}'
+          )
+          PY
+      - name: Build wheel and source distribution
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          python -m twine check dist/*
+      - name: Inspect distribution
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          wheel = next(Path('dist').glob('*.whl'))
+          with ZipFile(wheel) as archive:
+              paths = set(archive.namelist())
+              for name in ('__init__', 'gpt', 'gemini', 'grok', 'claude', 'mistral'):
+                  assert f'minions/{name}.py' in paths, name
+          PY
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/minions-py/
+    permissions:
+      id-token: write
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+      - name: Publish using Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@release/v1
